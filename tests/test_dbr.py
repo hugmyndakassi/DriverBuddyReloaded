@@ -423,6 +423,17 @@ def main():
     check(_got and _got[0] == "\\Device\\Foo",
           "N27: UTF-16LE unicode string extracted correctly (explicit endianness)")
 
+    # ---- N20: DDC offset match is base-register-width independent ----
+    from DriverBuddyReloaded import wdm as _wdm
+    check(_wdm._operand_targets_offset("[rax+0E0h]", _wdm._DDC_OFFSET),
+          "N20: DDC offset matches 3-char base register [rax+0E0h]")
+    check(_wdm._operand_targets_offset("[r8+0E0h]", _wdm._DDC_OFFSET),
+          "N20: DDC offset matches 2-char base register [r8+0E0h] (was broken)")
+    check(_wdm._operand_targets_offset("[r10+0E0h]", _wdm._DDC_OFFSET),
+          "N20: DDC offset matches 3-char extended register [r10+0E0h]")
+    check(not _wdm._operand_targets_offset("[r8+0D0h]", _wdm._DDC_OFFSET),
+          "N20: DDC offset does not match a different slot [r8+0D0h]")
+
     print("\n{} check(s), {} failure(s)".format(total[0], len(failures)))
     return 1 if failures else 0
 

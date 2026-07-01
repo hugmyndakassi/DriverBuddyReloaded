@@ -16,6 +16,20 @@ _IRP_IOSTACK_OFFSET = "[rdx+0B8h]"  # IRP.Tail.Overlay.CurrentStackLocation
 _DISPATCH_ARRAY_SLOT = "+70h"     # DRIVER_OBJECT.MajorFunction base offset
 
 
+def _operand_targets_offset(op_text, offset_tag):
+    """True when a destination operand string stores into a struct slot at
+    `offset_tag` (e.g. '+0E0h]'), independent of the base-register width.
+
+    The previous code sliced a fixed 4-char '[reg' prefix off the operand before
+    the substring test, which silently failed for 2-char base registers:
+    '[r8+0E0h]'[4:] == '0E0h]' drops the leading '+', so the tag '+0E0h]' no
+    longer matched and the DDC store went undetected.  The tag already includes
+    the trailing ']', so testing it against the whole operand is both simpler and
+    width-independent.
+    """
+    return offset_tag in (op_text or "")
+
+
 def check_for_fake_driver_entry(driver_entry_address, rep):
     """
     Checks if DriverEntry in WDM driver is fake and try to recover the real one
@@ -58,13 +72,13 @@ def locate_ddc(driver_entry_address, rep):
     dispatch = {}
     prev_instruction = driver_entry_func[0]
     for i in driver_entry_func[1:]:
-        if _DDC_OFFSET in idc.print_operand(i, 0)[4:] and idc.print_insn_mnem(prev_instruction) == "lea":
+        if _operand_targets_offset(idc.print_operand(i, 0), _DDC_OFFSET) and idc.print_insn_mnem(prev_instruction) == "lea":
             real_ddc = idc.get_name_ea_simple(idc.print_operand(prev_instruction, 1))
             if real_ddc != ida_compat.BADADDR:
                 rep.info("[+] Found `DispatchDeviceControl` at 0x{addr:08x}".format(addr=real_ddc))
                 idc.set_name(real_ddc, "DispatchDeviceControl")
                 dispatch["ddc"] = real_ddc
-        if _DIDC_OFFSET in idc.print_operand(i, 0)[4:] and idc.print_insn_mnem(prev_instruction) == "lea":
+        if _operand_targets_offset(idc.print_operand(i, 0), _DIDC_OFFSET) and idc.print_insn_mnem(prev_instruction) == "lea":
             real_didc = idc.get_name_ea_simple(idc.print_operand(prev_instruction, 1))
             rep.info("[+] Found `DispatchInternalDeviceControl` at 0x{addr:08x}".format(addr=real_didc))
             idc.set_name(real_didc, "DispatchInternalDeviceControl")
