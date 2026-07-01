@@ -24,6 +24,11 @@ One commit per fix; each `Fixed` bullet below is tagged with its review id.
   round-trip), and the second (source) operand is tried before the first, matching
   where the code actually sits in the observed compare/move patterns. Two new
   regression checks.
+- (N27) `device_name_finder.extract_unicode_strings()`: decoded matches with the
+  BOM-/native-endian-dependent `"utf-16"` codec while every other decode site uses
+  explicit `"utf-16-le"`. The regex matches `<ascii><00>` pairs (LE), so the result
+  was correct on the little-endian hosts IDA runs on but latently non-portable and
+  inconsistent. Now decodes `"utf-16-le"` explicitly. One new regression check.
 - (B12) `utils.is_driver()`: returned the first entry-point-named function found in
   segment/address order, so a driver carrying both a `GsDriverEntry` stub and a
   `DriverEntry` (or `DriverEntry_0`) resolved nondeterministically depending on PE

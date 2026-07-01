@@ -417,6 +417,12 @@ def main():
     check(_utils.is_driver() == 0x410,
           "B12: is_driver prefers DriverEntry over DriverEntry_0 (order-independent)")
 
+    # ---- N27: extract_unicode_strings decodes explicit UTF-16LE ----
+    _u16 = "\\Device\\Foo".encode("utf-16-le")
+    _got = [s.s for s in device_name_finder.extract_unicode_strings(_u16, n=4)]
+    check(_got and _got[0] == "\\Device\\Foo",
+          "N27: UTF-16LE unicode string extracted correctly (explicit endianness)")
+
     print("\n{} check(s), {} failure(s)".format(total[0], len(failures)))
     return 1 if failures else 0
 
