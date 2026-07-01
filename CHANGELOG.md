@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+Bug-fix pass from the 2026-06/07 two-part code review (findings B1-B19, N20-N29).
+One commit per fix; each `Fixed` bullet below is tagged with its review id.
+
+### Fixed
+
+- (B18) `dump_pool_tags.py`: the pool-tag scanners compared the operand type
+  against the bare literal `5` instead of the named `idc.o_imm`, an opaque magic
+  number inconsistent with the rest of the codebase. Now use `idc.o_imm`.
+
 ## [2.3.0] - 2026-06-29
 
 ### Added
