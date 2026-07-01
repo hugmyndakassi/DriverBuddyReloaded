@@ -39,13 +39,24 @@ def make_comment(pos, string):
     """
 
     current_comment = idc.get_cmt(pos, 0)
+    # Dedup on the stable part of an IOCTL #define.  get_define() embeds a macro
+    # name derived from the driver/input filename (e.g. `beep_0xABCD`), so the
+    # same IOCTL decoded after the input is renamed produces a *different* string
+    # and the old `string not in current_comment` check missed it, letting the
+    # comment grow on every re-run.  The `CTL_CODE(...)` tail identifies the IOCTL
+    # independently of the macro name, so dedup on it.  A non-IOCTL string (no
+    # `CTL_CODE(`) falls back to whole-string dedup, unchanged.
+    dedup_key = string
+    _ctl = string.find("CTL_CODE(")
+    if _ctl != -1:
+        dedup_key = string[_ctl:]
     if not current_comment:
         idc.set_cmt(pos, string, 0)
-    elif string not in current_comment:
+    elif dedup_key not in current_comment:
         idc.set_cmt(pos, current_comment + " " + string, 0)
     # Anterior comment -- visible in the HexRays decompiler pseudocode view.
     # idc has no add_extra_cmt; route through ida_compat (ida_lines.add_extra_cmt).
-    if string not in ida_compat.get_anterior_cmt(pos):
+    if dedup_key not in ida_compat.get_anterior_cmt(pos):
         ida_compat.add_anterior_cmt(pos, string)
 
 

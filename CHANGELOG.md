@@ -24,6 +24,13 @@ One commit per fix; each `Fixed` bullet below is tagged with its review id.
   round-trip), and the second (source) operand is tried before the first, matching
   where the code actually sits in the observed compare/move patterns. Two new
   regression checks.
+- (B11) `DriverBuddyReloaded.make_comment()`: the duplicate-suppression check
+  (`string not in current_comment`) compared the whole IOCTL `#define`, whose
+  macro name is derived from the input filename. Re-decoding the same IOCTL after
+  the input was renamed produced a different macro name, defeated the check, and
+  appended a second (near-identical) `#define`, so comments grew on every re-run.
+  Dedup now keys on the driver-name-independent `CTL_CODE(...)` tail; a non-IOCTL
+  comment string is unaffected.
 - (B14) `utils._build_sddl_map()`: decoded every candidate string as UTF-16LE
   regardless of the recorded string type, so an ASCII SDDL was mangled to garbage
   and dropped (and `get_strlit_contents` transcodes wide strings to UTF-8, which
