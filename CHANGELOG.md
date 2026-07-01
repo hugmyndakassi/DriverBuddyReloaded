@@ -15,6 +15,16 @@ One commit per fix; each `Fixed` bullet below is tagged with its review id.
 - (B18) `dump_pool_tags.py`: the pool-tag scanners compared the operand type
   against the bare literal `5` instead of the named `idc.o_imm`, an opaque magic
   number inconsistent with the rest of the codebase. Now use `idc.o_imm`.
+- (B17) `signatures.py`: filled gaps in the function/instruction sets.
+  `VALIDATION_FUNCS` gains the `RtlUIntAdd/Sub/Mult` safe-arithmetic family.
+  `FREE_POOL_FUNCS` gains `IoFreeMdl` (its freed pointer is the first argument,
+  which the UAF register model tracks); lookaside frees and `MmFreePagesFromMdl`
+  are deliberately excluded and documented, since their freed pointer is not the
+  first argument / the MDL stays valid. `PRIV_INSN_SEVERITY` gains the
+  descriptor/task-register stores `sidt`/`sgdt`/`sldt`/`str` (KASLR-leak
+  primitives); `rdmsr`/`wrmsr`/`rdpmc` are intentionally kept out (already scanned
+  whole-binary via `OPCODES`, so listing them here would double-report). Five new
+  regression checks in `tests/test_dbr.py`.
 
 ## [2.3.0] - 2026-06-29
 

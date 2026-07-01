@@ -324,6 +324,20 @@ def main():
           <= sig.SYMLINK_CREATE_FUNCS,
           "N4: symlink set includes protected + unprotected create APIs")
 
+    # ---- B17: signature-set gap fills ----
+    check({"RtlUIntAdd", "RtlUIntSub", "RtlUIntMult"} <= sig.VALIDATION_FUNCS,
+          "B17: VALIDATION_FUNCS includes the RtlUInt* safe-arithmetic family")
+    check("IoFreeMdl" in sig.FREE_POOL_FUNCS,
+          "B17: FREE_POOL_FUNCS includes IoFreeMdl (first-arg free)")
+    # Non-first-argument frees must NOT be tracked as first-arg frees.
+    check(not ({"ExFreeToLookasideListEx", "ExFreeToPagedLookasideList",
+                "MmFreePagesFromMdl"} & sig.FREE_POOL_FUNCS),
+          "B17: FREE_POOL_FUNCS excludes non-first-arg / non-dangling frees")
+    check({"sidt", "sgdt", "sldt", "str"} <= set(sig.PRIV_INSN_SEVERITY),
+          "B17: PRIV_INSN_SEVERITY covers descriptor/task-register stores")
+    check(not ({"rdmsr", "wrmsr", "rdpmc"} & set(sig.PRIV_INSN_SEVERITY)),
+          "B17: PRIV_INSN_SEVERITY excludes MSR/PMC ops (covered by OPCODES scan)")
+
     # find_symbolic_links must iterate the set and rate the unprotected variant
     # higher.  Two APIs resolve (each with one call site); the WDF one is absent
     # from functions_map and so is skipped.  prev_head -> BADADDR forces the
