@@ -24,6 +24,19 @@ One commit per fix; each `Fixed` bullet below is tagged with its review id.
   round-trip), and the second (source) operand is tried before the first, matching
   where the code actually sits in the observed compare/move patterns. Two new
   regression checks.
+- (B9) `scoring._opcode_reach_sev()` and `heuristics._user_pointer_tainted()`:
+  these handler-subtree reachability queries used the default
+  `CALLCHAIN_MAX_DEPTH`, which is independent of the `HANDLER_SEED_DEPTH` at which
+  handler bodies are discovered. Both are user-tunable, so lowering
+  `CALLCHAIN_MAX_DEPTH` below `HANDLER_SEED_DEPTH` could make attribution/taint
+  shallower than discovery. They now reach `max(CALLCHAIN_MAX_DEPTH,
+  HANDLER_SEED_DEPTH)` -- identical to today at the shipped defaults (6 >= 4), but
+  robust to tuning.
+- (N28) `callchain.py`: investigated the apparent `<` vs `<=` depth-bound
+  mismatch between `trace()` and `transitive_callees()` and confirmed they reach
+  the same hop count (the `<=` loop spends its first iteration seeding the start
+  set). Added a comment so the intentionally-different bounds are not "aligned"
+  into an off-by-one later. No behavioural change.
 - (B8) `ioctl_decoder._collect_switch_cases()`: scanned only the primary chunk
   (`start_ea..end_ea` via `next_head`), so a jump-table switch located in a
   secondary/tail function chunk (SEH funclet, `__guard_*` thunk) was skipped and

@@ -359,7 +359,12 @@ def _user_pointer_tainted(rep: "Reporter") -> Set[int]:
                 neither.add(fn.start_ea)
     if not neither:
         return set()
-    return transitive_callees(neither)
+    # Reach at least as deep as handler bodies are discovered (HANDLER_SEED_DEPTH)
+    # so the taint set never falls short of the set the deep checks actually run
+    # on, even if CALLCHAIN_MAX_DEPTH is tuned lower than HANDLER_SEED_DEPTH via
+    # the settings UI.  Defaults to CALLCHAIN_MAX_DEPTH (6 >= 4), so unchanged.
+    reach_depth = max(config.CALLCHAIN_MAX_DEPTH, config.HANDLER_SEED_DEPTH)
+    return transitive_callees(neither, reach_depth)
 
 
 def _cfg_reachable(handler_ea: int, ea_from: int, ea_to: int) -> bool:
