@@ -24,6 +24,11 @@ One commit per fix; each `Fixed` bullet below is tagged with its review id.
   round-trip), and the second (source) operand is tried before the first, matching
   where the code actually sits in the observed compare/move patterns. Two new
   regression checks.
+- (N29) `analysis.run_analysis()`: `utils.get_driver_id()` was the only pipeline
+  step not wrapped in `_stage()`, so an exception in its fragile WDF/DDC code
+  aborted the entire run. `_stage()` now returns the wrapped call's value (a no-op
+  for the void stages), and `get_driver_id` runs through it, falling back to an
+  `"unknown"` driver type so IOCTL and heuristic analysis still proceed.
 - (N21) `wdf.populate_wdf()`: the result of `idc.get_first_dref_to(idx - 2)` was
   used directly in `addr + ptr_size + ...` reads and then passed to
   `ida_bytes.del_items()` / `apply_struct_ptr()` with no BADADDR check. When the
