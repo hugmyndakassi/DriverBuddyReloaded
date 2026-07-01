@@ -24,6 +24,13 @@ One commit per fix; each `Fixed` bullet below is tagged with its review id.
   round-trip), and the second (source) operand is tried before the first, matching
   where the code actually sits in the observed compare/move patterns. Two new
   regression checks.
+- (N21) `wdf.populate_wdf()`: the result of `idc.get_first_dref_to(idx - 2)` was
+  used directly in `addr + ptr_size + ...` reads and then passed to
+  `ida_bytes.del_items()` / `apply_struct_ptr()` with no BADADDR check. When the
+  library string had no data reference the code read a garbage VA and could apply
+  the WDFFUNCTIONS type at a wrong-but-valid address. Now bails cleanly when the
+  reference or the derived `WdfFunctions` pointer is invalid, and guards the K/U
+  prefix read against the segment boundary.
 - (N24, N25) `wdm.define_ddc()` (cosmetic struct-member labelling): the
   `IO_STACK_LOCATION.OutputBufferLength` test `io_stack_reg + "+8" in disasm`
   also matched `+80h`/`+88h` (substring), so a store to offset 0x80/0x88 was
