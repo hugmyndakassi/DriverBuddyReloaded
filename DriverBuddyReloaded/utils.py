@@ -230,18 +230,32 @@ def get_driver_id(driver_entry_addr: int, rep: Reporter, ctx: AnalysisContext) -
     return driver_type
 
 
+# Recognised DriverEntry names, most-preferred first.  GsDriverEntry is the true
+# PE entry point on /GS binaries (issue #31) and is unwrapped to the real entry
+# downstream by check_for_fake_driver_entry, so prefer it; DriverEntry is the
+# normal name; DriverEntry_0 is IDA's collision-suffixed fallback.
+_DRIVER_ENTRY_NAMES = ("GsDriverEntry", "DriverEntry", "DriverEntry_0")
+
+
 def is_driver() -> Optional[int]:
     """
     Scan all segments for a DriverEntry function.
-    Returns the EA of DriverEntry, DriverEntry_0, or GsDriverEntry if found, else False.
-    GsDriverEntry is emitted by IDA 8.2+ for drivers compiled with /GS (issue #31).
+    Returns the EA of GsDriverEntry, DriverEntry, or DriverEntry_0 if found, else
+    False.  When more than one is present the choice is deterministic (by
+    _DRIVER_ENTRY_NAMES preference) rather than dependent on segment/address
+    order, so a driver carrying both a GsDriverEntry stub and a DriverEntry always
+    resolves to the same entry.
     """
+    found = {}
     for seg_ea in idautils.Segments():
         for func_addr in idautils.Functions(
                 idc.get_segm_start(seg_ea), idc.get_segm_end(seg_ea)):
             name = idc.get_func_name(func_addr)
-            if name in ("DriverEntry", "DriverEntry_0", "GsDriverEntry"):
-                return func_addr
+            if name in _DRIVER_ENTRY_NAMES and name not in found:
+                found[name] = func_addr
+    for name in _DRIVER_ENTRY_NAMES:
+        if name in found:
+            return found[name]
     return False
 
 

@@ -400,6 +400,23 @@ def main():
     check(_utils._decode_sddl_at(0x1000, 22) == "O:BAG:BAD:(A;;GA;;;WD)",
           "B14: narrow (ASCII) SDDL decodes correctly (not mangled as UTF-16)")
 
+    # ---- B12: is_driver prefers GsDriverEntry deterministically ----
+    _entry_names = {0x400: "sub_400", 0x410: "DriverEntry",
+                    0x420: "GsDriverEntry", 0x430: "DriverEntry_0"}
+    idautils_stub.Segments = lambda: iter([0x400])
+    idautils_stub.Functions = lambda a=None, b=None: iter([0x400, 0x410, 0x420, 0x430])
+    idc_stub.get_segm_start = lambda ea: 0x400
+    idc_stub.get_segm_end = lambda ea: 0x500
+    idc_stub.get_func_name = lambda ea: _entry_names.get(ea, "")
+    check(_utils.is_driver() == 0x420,
+          "B12: is_driver prefers GsDriverEntry when several entries are present")
+    # With no GsDriverEntry, DriverEntry wins over DriverEntry_0 regardless of order.
+    _entry_names2 = {0x430: "DriverEntry_0", 0x410: "DriverEntry"}
+    idautils_stub.Functions = lambda a=None, b=None: iter([0x430, 0x410])
+    idc_stub.get_func_name = lambda ea: _entry_names2.get(ea, "")
+    check(_utils.is_driver() == 0x410,
+          "B12: is_driver prefers DriverEntry over DriverEntry_0 (order-independent)")
+
     print("\n{} check(s), {} failure(s)".format(total[0], len(failures)))
     return 1 if failures else 0
 

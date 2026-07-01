@@ -24,6 +24,13 @@ One commit per fix; each `Fixed` bullet below is tagged with its review id.
   round-trip), and the second (source) operand is tried before the first, matching
   where the code actually sits in the observed compare/move patterns. Two new
   regression checks.
+- (B12) `utils.is_driver()`: returned the first entry-point-named function found in
+  segment/address order, so a driver carrying both a `GsDriverEntry` stub and a
+  `DriverEntry` (or `DriverEntry_0`) resolved nondeterministically depending on PE
+  layout. Now collects all matches and returns by a fixed preference
+  (`GsDriverEntry` > `DriverEntry` > `DriverEntry_0`); `GsDriverEntry` is the true
+  /GS entry point and is unwrapped downstream by `check_for_fake_driver_entry`. Two
+  new regression checks.
 - (B10) `DriverBuddyReloaded.py` (IOCTL row-delete / "Invalid IOCTL"): removing an
   IOCTL only called `idc.del_extra_cmt(ea, E_PREV + 0)`, which clears just the
   first anterior line. `make_comment` can append several anterior lines
