@@ -370,6 +370,24 @@ def main():
     check(unprot is not None and unprot.severity == config.SEV_LOW,
           "N4: IoCreateUnprotectedSymbolicLink rated LOW (NULL-DACL link)")
 
+    # ---- B5+B13: find_ioctls reads the immediate directly, never mutates the IDB ----
+    from DriverBuddyReloaded import ida_compat as _ida_compat
+    idc_stub.o_imm = 5
+    # operand 1 is the immediate IOCTL; operand 0 is not an immediate.
+    idc_stub.get_operand_type = lambda ea, n: 5 if n == 1 else 4
+    idc_stub.get_operand_value = lambda ea, n: 0x9C402420 if n == 1 else 0
+    _opdec_calls = []
+    idc_stub.op_dec = lambda ea, n: _opdec_calls.append((ea, n))
+    idafuncs_stub.get_func_name = lambda ea: "DispatchDeviceControl"
+    _ida_compat.iter_text_matches = lambda needle: iter([0x1500])
+    rep_fi = reporting.Reporter()
+    found_fi = ioctl_decoder.find_ioctls(rep_fi)
+    fi = rep_fi.by_category("ioctl")
+    check(found_fi and len(fi) == 1 and fi[0].data.get("code") == 0x9C402420,
+          "B13: find_ioctls recovers the IOCTL from the second operand")
+    check(not _opdec_calls,
+          "B5: find_ioctls does not mutate the IDB display format (no op_dec)")
+
     print("\n{} check(s), {} failure(s)".format(total[0], len(failures)))
     return 1 if failures else 0
 

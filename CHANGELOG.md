@@ -15,6 +15,15 @@ One commit per fix; each `Fixed` bullet below is tagged with its review id.
 - (B18) `dump_pool_tags.py`: the pool-tag scanners compared the operand type
   against the bare literal `5` instead of the named `idc.o_imm`, an opaque magic
   number inconsistent with the rest of the codebase. Now use `idc.o_imm`.
+- (B5, B13) `ioctl_decoder.find_ioctls()`: the fuzzy `IoControlCode` fallback
+  scanner called `idc.op_dec()` on every match to coerce the operand to decimal
+  before reading it back as text. `op_dec` is a **persistent IDB write** -- it
+  silently rewrote the operand display radix at every match site, including ones
+  that were not IOCTLs. Now the immediate is read directly with
+  `idc.get_operand_value()` (no IDB mutation, no format-dependent text
+  round-trip), and the second (source) operand is tried before the first, matching
+  where the code actually sits in the observed compare/move patterns. Two new
+  regression checks.
 - (B17) `signatures.py`: filled gaps in the function/instruction sets.
   `VALIDATION_FUNCS` gains the `RtlUIntAdd/Sub/Mult` safe-arithmetic family.
   `FREE_POOL_FUNCS` gains `IoFreeMdl` (its freed pointer is the first argument,

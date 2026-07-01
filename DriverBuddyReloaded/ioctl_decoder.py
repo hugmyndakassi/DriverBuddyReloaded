@@ -706,15 +706,17 @@ def find_ioctls(rep: Reporter) -> bool:
     result = False
     rep.info("[>] Searching for IOCTLs found by IDA...")
     for ea in ida_compat.iter_text_matches("IoControlCode"):
-        for opnd in (0, 1):
+        # Prefer the second (source) operand: in every observed compare/move
+        # against IoControlCode the code sits there; fall back to the first.
+        # Read the immediate value directly with get_operand_value rather than
+        # op_dec + print_operand + int() -- op_dec is a *persistent IDB write*
+        # (it rewrites the operand's display radix to decimal at every match
+        # site, even ones that turn out not to be IOCTLs), and the printed-text
+        # round-trip is format-dependent and fragile.
+        for opnd in (1, 0):
             if idc.get_operand_type(ea, opnd) != idc.o_imm:
                 continue
-            idc.op_dec(ea, opnd)
-            try:
-                raw = idc.print_operand(ea, opnd)
-                ioctl_code = int(raw, 16) if raw.startswith(("0x", "0X")) else int(raw)
-            except (TypeError, ValueError):
-                continue
+            ioctl_code = idc.get_operand_value(ea, opnd) & 0xffffffff
             if not _is_valid_ctl_code(ioctl_code):
                 continue
             d = decode(ioctl_code)
