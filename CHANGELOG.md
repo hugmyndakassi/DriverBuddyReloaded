@@ -24,6 +24,15 @@ One commit per fix; each `Fixed` bullet below is tagged with its review id.
   round-trip), and the second (source) operand is tried before the first, matching
   where the code actually sits in the observed compare/move patterns. Two new
   regression checks.
+- (N22, N23) `heuristics.check_double_fetch()`: (N22) the memory-load regex
+  `\[(\w+)(?:\+(\w+))?\]` matched only `[reg]`/`[reg+disp]` and silently skipped
+  SIB/indexed loads, so a double-fetch through `[rcx+rdx*4]` was missed even
+  though the operand-type filter already admitted them; the regex now captures the
+  base plus the full bracket remainder. (N23) only the first two reads of a
+  `(reg, offset)` were compared, so a probe between reads 1 and 2 masked a genuine
+  race between reads 2 and 3; now every adjacent read pair is checked and the
+  first unprotected, CFG-reachable pair is reported. Four new regex regression
+  checks.
 - (B9) `scoring._opcode_reach_sev()` and `heuristics._user_pointer_tainted()`:
   these handler-subtree reachability queries used the default
   `CALLCHAIN_MAX_DEPTH`, which is independent of the `HANDLER_SEED_DEPTH` at which

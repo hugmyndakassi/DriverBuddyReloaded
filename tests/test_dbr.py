@@ -434,6 +434,22 @@ def main():
     check(not _wdm._operand_targets_offset("[r8+0D0h]", _wdm._DDC_OFFSET),
           "N20: DDC offset does not match a different slot [r8+0D0h]")
 
+    # ---- N22: double-fetch load regex captures SIB / indexed forms ----
+    from DriverBuddyReloaded import heuristics as _heur
+
+    def _parse_load(text):
+        m = _heur._MEM_LOAD_RE.search(text)
+        if not m:
+            return None
+        return (m.group(1), (m.group(2) or "").lstrip("+") or "0")
+
+    check(_parse_load("[rcx+8]") == ("rcx", "8"), "N22: [rcx+8] parses to (rcx, 8)")
+    check(_parse_load("[rcx]") == ("rcx", "0"), "N22: [rcx] parses to (rcx, 0)")
+    check(_parse_load("[rcx+rdx*4]") == ("rcx", "rdx*4"),
+          "N22: SIB [rcx+rdx*4] now matched (was silently skipped)")
+    check(_parse_load("[rcx+rdx*4+8]") == ("rcx", "rdx*4+8"),
+          "N22: SIB+disp [rcx+rdx*4+8] matched")
+
     print("\n{} check(s), {} failure(s)".format(total[0], len(failures)))
     return 1 if failures else 0
 

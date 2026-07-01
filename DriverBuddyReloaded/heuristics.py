@@ -334,7 +334,11 @@ def check_physical_mem_ref(rep: Reporter, handler_eas: Set[int]) -> None:
                 detail="Reference to physical memory device object - possible BYOVD pattern"))
 
 
-_MEM_LOAD_RE = re.compile(r'\[(\w+)(?:\+(\w+))?\]')
+# Capture the base register and the remainder inside the brackets.  The remainder
+# covers plain displacement (`+8`), SIB (`+rdx*4`, `+rdx*4+8`) and nothing (`[rcx]`).
+# The old `\[(\w+)(?:\+(\w+))?\]` matched only `[reg]` / `[reg+disp]` and silently
+# skipped SIB/indexed loads, so a double-fetch through `[rcx+rdx*4]` was missed (N22).
+_MEM_LOAD_RE = re.compile(r'\[(\w+)([^\]]*)\]')
 # Frame/stack registers: a re-read through these is a local variable, never a
 # user-mode pointer, so it cannot be a double-fetch source.
 _STACK_REGS = frozenset({"rsp", "rbp", "esp", "ebp"})
@@ -436,28 +440,37 @@ def check_double_fetch(rep: "Reporter", handler_ea: int) -> None:
         src_reg = m.group(1)
         if src_reg.lower() in _STACK_REGS:
             continue
-        offset = m.group(2) or "0"
+        # Remainder inside the brackets, normalised (drop a leading '+'); plain
+        # [reg] keys as "0".  Identical addressing text -> same key -> same slot.
+        offset = (m.group(2) or "").lstrip("+") or "0"
         loads.setdefault((src_reg, offset), []).append(ea)
 
     for (src_reg, offset), eas in loads.items():
         if len(eas) < 2:
             continue
-        ea1, ea2 = sorted(eas[:2])
-        # Two reads in mutually-exclusive sibling branches are not a re-fetch.
-        if not _cfg_reachable(handler_ea, ea1, ea2):
-            continue
-        has_probe = False
-        for ea in func_insns:
-            if ea <= ea1 or ea >= ea2:
+        # Check every ADJACENT pair of reads, not just the first two: if a probe
+        # sits between reads 1 and 2 but the genuine race is between reads 2 and 3,
+        # inspecting only the first pair would clear it and miss the double-fetch
+        # (N23).  Report the first unprotected, CFG-reachable pair (one finding per
+        # re-read location) and stop.
+        eas_sorted = sorted(eas)
+        for k in range(len(eas_sorted) - 1):
+            ea1, ea2 = eas_sorted[k], eas_sorted[k + 1]
+            # Two reads in mutually-exclusive sibling branches are not a re-fetch.
+            if not _cfg_reachable(handler_ea, ea1, ea2):
                 continue
-            mnem = idc.print_insn_mnem(ea)
-            if mnem not in ("call",):
+            has_probe = False
+            for ea in func_insns:
+                if ea <= ea1 or ea >= ea2:
+                    continue
+                if idc.print_insn_mnem(ea) != "call":
+                    continue
+                callee = _callee_name(ea)
+                if callee in sig.PROBE_FUNCS or callee in sig.COPY_SINKS:
+                    has_probe = True
+                    break
+            if has_probe:
                 continue
-            callee = _callee_name(ea)
-            if callee in sig.PROBE_FUNCS or callee in sig.COPY_SINKS:
-                has_probe = True
-                break
-        if not has_probe:
             rep.add(Finding(
                 category="heuristic",
                 title="TOCTOU double-fetch: [{}+{}] read at 0x{:x} and 0x{:x} without intervening ProbeForRead".format(
@@ -467,6 +480,7 @@ def check_double_fetch(rep: "Reporter", handler_ea: int) -> None:
                 severity=config.SEV_MEDIUM,
                 detail="0x{:x} -> 0x{:x}; user-pointer field re-read with no ProbeForRead/ProbeForWrite between".format(
                     ea1, ea2)))
+            break
 
 
 _FREE_ARG_REG_X64 = {"rcx", "ecx"}
