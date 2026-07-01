@@ -720,6 +720,9 @@ def _global_nulled_after(g_ea: int, free_ea: int, func_ea: int) -> bool:
 
 def _global_read_sites(g_ea: int, exclude_func: int):
     """Read references to the global from functions other than the freeing one."""
+    # ida_xref.dref_t is (dr_U=0, dr_O=1, dr_W=2, dr_R=3, ...), so dr_W == 2.
+    # The fallback of 2 is therefore correct -- do NOT "simplify" it to 1
+    # (that is dr_O and would skip offset refs instead of writes).
     dr_w = getattr(ida_xref, "dr_W", 2) if ida_xref else 2
     sites = []
     for xr in idautils.XrefsTo(g_ea, 0):
