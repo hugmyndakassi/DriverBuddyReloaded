@@ -2,12 +2,12 @@
   "tool": "DriverBuddyReloaded",
   "driver": "HEVD.sys",
   "sha256": "bfa54bf396e0453c36afeb1b3a7a04e855532464440aa6b428e0a6308c8818f2",
-  "generated": "2026-07-03-1783060782",
+  "generated": "2026-07-03-1783074810",
   "severity_counts": {
     "INFO": 5,
-    "HIGH": 60,
+    "HIGH": 61,
     "LOW": 27,
-    "CRITICAL": 11,
+    "CRITICAL": 10,
     "MEDIUM": 14
   },
   "findings": [
@@ -389,6 +389,12 @@
         "access_code": 0,
         "handler_ea": 5369266360,
         "handler_name": "FreeUaFObjectNonPagedPoolNxIoctlHandler",
+        "case_range": [
+          [
+            5369255652,
+            5369255689
+          ]
+        ],
         "sink_attribution": "handler",
         "risk_reasons": [
           "METHOD_NEITHER (+3)",
@@ -414,6 +420,12 @@
         "access_code": 0,
         "handler_ea": 5369265808,
         "handler_name": "AllocateFakeObjectNonPagedPoolNxIoctlHandler",
+        "case_range": [
+          [
+            5369255607,
+            5369255651
+          ]
+        ],
         "sink_attribution": "handler",
         "risk_reasons": [
           "METHOD_NEITHER (+3)",
@@ -439,6 +451,12 @@
         "access_code": 0,
         "handler_ea": 5369256472,
         "handler_name": "CreateArbitraryReadWriteHelperObjectNonPagedPoolNxIoctlHandler",
+        "case_range": [
+          [
+            5369255562,
+            5369255606
+          ]
+        ],
         "sink_attribution": "handler",
         "risk_reasons": [
           "METHOD_NEITHER (+3)",
@@ -464,6 +482,12 @@
         "access_code": 0,
         "handler_ea": 5369257532,
         "handler_name": "SetArbitraryReadWriteHelperObjecNameNonPagedPoolNxIoctlHandler",
+        "case_range": [
+          [
+            5369255514,
+            5369255558
+          ]
+        ],
         "sinks": [
           "memmove"
         ],
@@ -493,6 +517,12 @@
         "access_code": 0,
         "handler_ea": 5369257080,
         "handler_name": "GetArbitraryReadWriteHelperObjecNameNonPagedPoolNxIoctlHandler",
+        "case_range": [
+          [
+            5369255466,
+            5369255510
+          ]
+        ],
         "sinks": [
           "memmove"
         ],
@@ -522,6 +552,12 @@
         "access_code": 0,
         "handler_ea": 5369256724,
         "handler_name": "DeleteArbitraryReadWriteHelperObjecNonPagedPoolNxIoctlHandler",
+        "case_range": [
+          [
+            5369255418,
+            5369255462
+          ]
+        ],
         "sink_attribution": "handler",
         "risk_reasons": [
           "METHOD_NEITHER (+3)",
@@ -547,6 +583,12 @@
         "access_code": 0,
         "handler_ea": 5369266572,
         "handler_name": "UseUaFObjectNonPagedPoolNxIoctlHandler",
+        "case_range": [
+          [
+            5369255287,
+            5369255331
+          ]
+        ],
         "sink_attribution": "handler",
         "risk_reasons": [
           "METHOD_NEITHER (+3)",
@@ -572,6 +614,12 @@
         "access_code": 0,
         "handler_ea": 5369261252,
         "handler_name": "MemoryDisclosureNonPagedPoolIoctlHandler",
+        "case_range": [
+          [
+            5369255239,
+            5369255283
+          ]
+        ],
         "sinks": [
           "memmove"
         ],
@@ -601,6 +649,12 @@
         "access_code": 0,
         "handler_ea": 5369258880,
         "handler_name": "BufferOverflowPagedPoolSessionIoctlHandler",
+        "case_range": [
+          [
+            5369255191,
+            5369255235
+          ]
+        ],
         "sinks": [
           "memmove"
         ],
@@ -630,6 +684,12 @@
         "access_code": 0,
         "handler_ea": 5369266720,
         "handler_name": "WriteNULLIoctlHandler",
+        "case_range": [
+          [
+            5369255143,
+            5369255187
+          ]
+        ],
         "sink_attribution": "handler",
         "risk_reasons": [
           "METHOD_NEITHER (+3)",
@@ -655,6 +715,12 @@
         "access_code": 0,
         "handler_ea": 5369258348,
         "handler_name": "BufferOverflowNonPagedPoolNxIoctlHandler",
+        "case_range": [
+          [
+            5369255095,
+            5369255139
+          ]
+        ],
         "sinks": [
           "memmove"
         ],
@@ -684,6 +750,12 @@
         "access_code": 0,
         "handler_ea": 5369261796,
         "handler_name": "MemoryDisclosureNonPagedPoolNxIoctlHandler",
+        "case_range": [
+          [
+            5369255047,
+            5369255091
+          ]
+        ],
         "sinks": [
           "memmove"
         ],
@@ -713,6 +785,12 @@
         "access_code": 0,
         "handler_ea": 5369266192,
         "handler_name": "AllocateUaFObjectNonPagedPoolNxIoctlHandler",
+        "case_range": [
+          [
+            5369255007,
+            5369255043
+          ]
+        ],
         "sink_attribution": "handler",
         "risk_reasons": [
           "METHOD_NEITHER (+3)",
@@ -738,6 +816,12 @@
         "access_code": 0,
         "handler_ea": 5369263352,
         "handler_name": "TypeConfusionIoctlHandler",
+        "case_range": [
+          [
+            5369254833,
+            5369254877
+          ]
+        ],
         "sink_attribution": "handler",
         "risk_reasons": [
           "METHOD_NEITHER (+3)",
@@ -763,6 +847,12 @@
         "access_code": 0,
         "handler_ea": 5369260884,
         "handler_name": "IntegerOverflowIoctlHandler",
+        "case_range": [
+          [
+            5369254785,
+            5369254829
+          ]
+        ],
         "sink_attribution": "handler",
         "risk_reasons": [
           "METHOD_NEITHER (+3)",
@@ -788,6 +878,12 @@
         "access_code": 0,
         "handler_ea": 5369262344,
         "handler_name": "NullPointerDereferenceIoctlHandler",
+        "case_range": [
+          [
+            5369254737,
+            5369254781
+          ]
+        ],
         "sink_attribution": "handler",
         "risk_reasons": [
           "METHOD_NEITHER (+3)",
@@ -813,6 +909,12 @@
         "access_code": 0,
         "handler_ea": 5369264272,
         "handler_name": "UninitializedMemoryStackIoctlHandler",
+        "case_range": [
+          [
+            5369254689,
+            5369254733
+          ]
+        ],
         "sink_attribution": "handler",
         "risk_reasons": [
           "METHOD_NEITHER (+3)",
@@ -838,6 +940,12 @@
         "access_code": 0,
         "handler_ea": 5369263928,
         "handler_name": "UninitializedMemoryPagedPoolIoctlHandler",
+        "case_range": [
+          [
+            5369254641,
+            5369254685
+          ]
+        ],
         "sink_attribution": "handler",
         "risk_reasons": [
           "METHOD_NEITHER (+3)",
@@ -863,6 +971,12 @@
         "access_code": 0,
         "handler_ea": 5369260032,
         "handler_name": "DoubleFetchIoctlHandler",
+        "case_range": [
+          [
+            5369254601,
+            5369254637
+          ]
+        ],
         "sinks": [
           "memmove"
         ],
@@ -892,6 +1006,12 @@
         "access_code": 0,
         "handler_ea": 5369264680,
         "handler_name": "AllocateFakeObjectNonPagedPoolIoctlHandler",
+        "case_range": [
+          [
+            5369254495,
+            5369254539
+          ]
+        ],
         "sink_attribution": "handler",
         "risk_reasons": [
           "METHOD_NEITHER (+3)",
@@ -917,6 +1037,12 @@
         "access_code": 0,
         "handler_ea": 5369259412,
         "handler_name": "BufferOverflowStackIoctlHandler",
+        "case_range": [
+          [
+            5369254447,
+            5369254491
+          ]
+        ],
         "sinks": [
           "memmove"
         ],
@@ -946,6 +1072,12 @@
         "access_code": 0,
         "handler_ea": 5369259712,
         "handler_name": "BufferOverflowStackGSIoctlHandler",
+        "case_range": [
+          [
+            5369254399,
+            5369254443
+          ]
+        ],
         "sinks": [
           "memmove"
         ],
@@ -975,6 +1107,12 @@
         "access_code": 0,
         "handler_ea": 5369257560,
         "handler_name": "ArbitraryWriteIoctlHandler",
+        "case_range": [
+          [
+            5369254351,
+            5369254395
+          ]
+        ],
         "sink_attribution": "handler",
         "risk_reasons": [
           "METHOD_NEITHER (+3)",
@@ -1000,6 +1138,12 @@
         "access_code": 0,
         "handler_ea": 5369257820,
         "handler_name": "BufferOverflowNonPagedPoolIoctlHandler",
+        "case_range": [
+          [
+            5369254303,
+            5369254347
+          ]
+        ],
         "sinks": [
           "memmove"
         ],
@@ -1029,6 +1173,12 @@
         "access_code": 0,
         "handler_ea": 5369265064,
         "handler_name": "AllocateUaFObjectNonPagedPoolIoctlHandler",
+        "case_range": [
+          [
+            5369254255,
+            5369254299
+          ]
+        ],
         "sink_attribution": "handler",
         "risk_reasons": [
           "METHOD_NEITHER (+3)",
@@ -1054,6 +1204,12 @@
         "access_code": 0,
         "handler_ea": 5369265444,
         "handler_name": "UseUaFObjectNonPagedPoolIoctlHandler",
+        "case_range": [
+          [
+            5369254207,
+            5369254251
+          ]
+        ],
         "sink_attribution": "handler",
         "risk_reasons": [
           "METHOD_NEITHER (+3)",
@@ -1079,6 +1235,12 @@
         "access_code": 0,
         "handler_ea": 5369265232,
         "handler_name": "FreeUaFObjectNonPagedPoolIoctlHandler",
+        "case_range": [
+          [
+            5369254161,
+            5369255702
+          ]
+        ],
         "sink_attribution": "handler",
         "risk_reasons": [
           "METHOD_NEITHER (+3)",
@@ -1091,7 +1253,7 @@
       "title": "IOCTL 0x0022203B",
       "ea": "0x1400850bb",
       "func": "DispatchDeviceControl",
-      "severity": "CRITICAL",
+      "severity": "HIGH",
       "detail": "FILE_DEVICE_UNKNOWN / METHOD_NEITHER / FILE_ANY_ACCESS [decompiler] | sinks (dispatcher-wide): memmove",
       "data": {
         "code": 2236475,
@@ -1311,8 +1473,8 @@
     {
       "category": "heuristic",
       "title": "Unvalidated copy: memmove",
-      "ea": "0x1400860d8",
-      "func": "TriggerBufferOverflowNonPagedPool",
+      "ea": "0x140087072",
+      "func": "TriggerMemoryDisclosureNonPagedPoolNx",
       "severity": "HIGH",
       "detail": "No validation call found in 20-back/6-forward window",
       "data": {}
@@ -1322,6 +1484,15 @@
       "title": "Unvalidated copy: memmove",
       "ea": "0x1400862ea",
       "func": "TriggerBufferOverflowNonPagedPoolNx",
+      "severity": "HIGH",
+      "detail": "No validation call found in 20-back/6-forward window",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Unvalidated copy: memmove",
+      "ea": "0x140086911",
+      "func": "TriggerDoubleFetch",
       "severity": "HIGH",
       "detail": "No validation call found in 20-back/6-forward window",
       "data": {}
@@ -1356,15 +1527,6 @@
     {
       "category": "heuristic",
       "title": "Unvalidated copy: memmove",
-      "ea": "0x140086911",
-      "func": "TriggerDoubleFetch",
-      "severity": "HIGH",
-      "detail": "No validation call found in 20-back/6-forward window",
-      "data": {}
-    },
-    {
-      "category": "heuristic",
-      "title": "Unvalidated copy: memmove",
       "ea": "0x140086e50",
       "func": "TriggerMemoryDisclosureNonPagedPool",
       "severity": "HIGH",
@@ -1374,8 +1536,8 @@
     {
       "category": "heuristic",
       "title": "Unvalidated copy: memmove",
-      "ea": "0x140087072",
-      "func": "TriggerMemoryDisclosureNonPagedPoolNx",
+      "ea": "0x1400860d8",
+      "func": "TriggerBufferOverflowNonPagedPool",
       "severity": "HIGH",
       "detail": "No validation call found in 20-back/6-forward window",
       "data": {}

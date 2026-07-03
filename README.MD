@@ -113,7 +113,9 @@ To reopen the IOCTLs window or findings window at any time (without re-running a
 engineering tasks. It has a number of handy features, such as:
 
 * Identifying the type of the driver (WDM, KMDF, UMDF, WDF, Mini-Filter, Stream Minidriver, AVStream, PortCls)
-* Locating `DispatchDeviceControl` / `DispatchInternalDeviceControl` functions
+* Locating `DispatchDeviceControl` / `DispatchInternalDeviceControl` functions for **every** driver type
+  (a `MajorFunction[IRP_MJ_DEVICE_CONTROL]` store scan finds the handler even in a minifilter/WDF driver that also
+  exposes a legacy control device, and even when the assignment lives in a helper rather than `DriverEntry`)
 * Populating common structures for `WDF` and `WDM` drivers
     * Attempts to identify and label structures like the `IRP` and `IO_STACK_LOCATION`
     * Label calls to `WDF` functions that would normally be unlabeled
@@ -121,8 +123,12 @@ engineering tasks. It has a number of handy features, such as:
 * Finding and decoding IOCTL codes
     * Automatic multi-strategy scan of identified dispatcher functions (no cursor placement required):
       decompiler ctree (recovers codes hidden by jump-table or binary-search dispatch that never appear as
-      immediates), IDA switch-table recovery, and a raw immediate-operand fallback
-    * NTSTATUS values resolved dynamically from the IDA type database (no static list)
+      immediates), IDA switch-table recovery, and a raw immediate-operand fallback (the fallback runs only on a
+      function that actually reads the IRP's IoControlCode, so a mis-identified library helper cannot leak its
+      internal constants as false IOCTLs)
+    * NTSTATUS values resolved dynamically from the IDA type database (with a broad hardcoded fallback), and
+      **outbound** IOCTLs the driver merely sends downstream (`IoBuildDeviceIoControlRequest` / `ZwDeviceIoControlFile`
+      / ...) are excluded so they are not mistaken for the driver's own attack surface
 * Flagging functions prone to misuse
 * Finding potential `DeviceName` (mmap scan + IDA Strings DB fallback, with source address)
 * Dumping `Pooltags` (import-based primary + register-propagated fallback for tags staged in a register)
@@ -135,9 +141,11 @@ engineering tasks. It has a number of handy features, such as:
 * **Device ACL audit and symbolic-link tracking**: flags `IoCreateDevice` devices created with no security
   descriptor (world-accessible) / weak `IoCreateDeviceSecure` SDDLs, and decodes `IoCreateSymbolicLink` target paths
 * **Exports audit**: flags driver exports with zero internal cross-references (potential attack surface)
-* **Risk-scoring** decoded IOCTLs (prioritising `METHOD_NEITHER` / `FILE_ANY_ACCESS`, and bumping the IOCTLs whose
-  own handler reaches a dangerous sink such as `MmMapIoSpace`, `memcpy`, `__writemsr`, port I/O or PCI-config
-  access) and presenting all findings, by severity, in a clickable results window (double-click to jump to the address)
+* **Risk-scoring** decoded IOCTLs per-IOCTL (prioritising `METHOD_NEITHER` / `FILE_ANY_ACCESS`, and bumping an IOCTL
+  only for the dangerous sinks/opcodes reachable from its **own** case handler - `MmMapIoSpace`, `memcpy`,
+  `__writemsr`, port I/O, PCI-config access - so a benign code in a monolithic dispatcher is no longer tarred with a
+  dangerous sibling's sinks; when attribution is imprecise the bump is capped rather than forced to CRITICAL) and
+  presenting all findings, by severity, in a clickable results window (double-click to jump to the address)
 * **Tracing call chains** from dispatch / IOCTL handlers to dangerous sinks (heuristic, name-based)
 * Exporting results as a machine-readable **JSON** file and a standalone **HTML report**
 

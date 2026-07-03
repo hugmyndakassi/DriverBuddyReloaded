@@ -99,14 +99,18 @@ def _instructions_window(ea: int, lookback: int, lookahead: int):
 
 def check_user_copy_validation(rep: Reporter, handler_eas: Set[int]) -> None:
     """
-    Flag copy-sink calls in handler functions that lack a nearby validation call.
+    Flag copy-sink calls that lack a nearby validation call, scoped to the IOCTL
+    dispatch surface.
 
-    Severity is HIGH when the copy is inside a known handler (direct user-mode exposure),
-    MEDIUM otherwise.
+    Only functions in *handler_eas* (the dispatcher's transitive callee set, which
+    already excludes library/thunk leaves) are scanned.  The previous whole-binary
+    scan flagged every internal / logging / statically-linked-library copy in the
+    driver at MEDIUM, which was the dominant false-positive class (e.g. amp's log
+    builders, RTCore's SDDL helpers).  A copy that an attacker cannot reach through
+    the dispatch surface is not an IOCTL attack-surface finding, so it is dropped.
     """
-    for func_ea in idautils.Functions():
+    for func_ea in handler_eas:
         func_name = ida_funcs.get_func_name(func_ea) or ""
-        is_handler = func_ea in handler_eas
         for head in idautils.FuncItems(func_ea):
             callee = _callee_name(head)
             if callee not in sig.COPY_SINKS:
@@ -120,13 +124,12 @@ def check_user_copy_validation(rep: Reporter, handler_eas: Set[int]) -> None:
                     break
             if validated:
                 continue
-            sev = config.SEV_HIGH if is_handler else config.SEV_MEDIUM
             rep.add(Finding(
                 category="heuristic",
                 title="Unvalidated copy: {}".format(callee),
                 ea=head,
                 func=func_name,
-                severity=sev,
+                severity=config.SEV_HIGH,
                 detail="No validation call found in {}-back/{}-forward window".format(
                     config.COPY_VALIDATION_LOOKBACK, config.COPY_VALIDATION_LOOKAHEAD)))
 

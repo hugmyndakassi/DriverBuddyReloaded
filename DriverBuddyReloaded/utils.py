@@ -28,7 +28,8 @@ from DriverBuddyReloaded import config, signatures as sig
 from DriverBuddyReloaded.reporting import Finding
 from .find_opcodes import find
 from .wdf import populate_wdf
-from .wdm import check_for_fake_driver_entry, define_ddc, find_dispatch_function, locate_ddc
+from .wdm import (check_for_fake_driver_entry, define_ddc, find_dispatch_function,
+                  find_majorfunction_dispatchers, locate_ddc)
 
 
 @dataclass
@@ -191,9 +192,17 @@ def get_xrefs(func_map: Dict[str, int], rep: Reporter, kind: str = "function") -
 
 def get_driver_id(driver_entry_addr: int, rep: Reporter, ctx: AnalysisContext) -> str:
     """
-    Classify the driver type by examining imports, then kick off type-specific
-    analysis (WDF struct identification, WDM dispatch detection, etc.).
+    Classify the driver type by examining imports, then discover the
+    IRP_MJ_DEVICE_CONTROL dispatcher(s).
+
     Returns a string such as 'WDM', 'WDF', 'KMDF', 'Mini-Filter', etc.
+
+    Dispatch discovery runs for EVERY driver type, not only WDM: minifilter, WDF,
+    and other frameworks routinely also expose a legacy control device with an
+    IRP_MJ_DEVICE_CONTROL handler, and that control device is the attack surface.
+    Gating discovery behind the WDM label previously left ctx.ddc_addresses empty
+    for those drivers, so the whole IOCTL / callchain / heuristic pipeline was
+    skipped on their dispatch surface (e.g. zam64's 31 IOCTLs were missed).
     """
     driver_type = ""
     for name in ctx.imports_map:
@@ -216,16 +225,30 @@ def get_driver_id(driver_entry_addr: int, rep: Reporter, ctx: AnalysisContext) -
     if not driver_type:
         rep.info("[!] Unable to determine driver type; assuming WDM")
         driver_type = "WDM"
-        real_entry = check_for_fake_driver_entry(driver_entry_addr, rep)
-        ctx.real_entry_addr = real_entry
-        ddc_map = locate_ddc(real_entry, rep)
+
+    # check_for_fake_driver_entry unwraps a GsDriverEntry /GS stub; it is a WDM
+    # concern (irp_mj.run reads real_entry_addr only for WDM), so only run it there.
+    if driver_type == "WDM":
+        ctx.real_entry_addr = check_for_fake_driver_entry(driver_entry_addr, rep)
+    else:
+        ctx.real_entry_addr = driver_entry_addr
+
+    # Primary discovery for all driver types: scan the whole binary for the
+    # MajorFunction[IRP_MJ_DEVICE_CONTROL] store (works whether the assignment
+    # lives in DriverEntry or a helper, and for minifilter/WDF entries).
+    ddc_addrs = find_majorfunction_dispatchers(rep)
+    if not ddc_addrs:
+        # Fallbacks: the entry-scoped struct-store scan, then the corroborated
+        # CFG/struct-index guess.  Both only recover WDM-shaped dispatchers.
+        ddc_map = locate_ddc(ctx.real_entry_addr, rep)
         if ddc_map is not None:
-            for ddc in ddc_map.values():
-                define_ddc(ddc, rep)
-                ctx.ddc_addresses.append(ddc)
-        if ddc_map is None:
-            for ea in find_dispatch_function(rep):
-                ctx.ddc_addresses.append(ea)
+            ddc_addrs = list(ddc_map.values())
+        else:
+            ddc_addrs = find_dispatch_function(rep)
+
+    for ddc in ddc_addrs:
+        define_ddc(ddc, rep)
+        ctx.ddc_addresses.append(ddc)
 
     return driver_type
 

@@ -14,14 +14,59 @@ from typing import Dict, List, Tuple, TYPE_CHECKING
 if TYPE_CHECKING:
     from DriverBuddyReloaded.reporting import Reporter
 
-from DriverBuddyReloaded import config
+from DriverBuddyReloaded import config, signatures as sig
 
 try:
     import ida_funcs
+    import idc
+    import idautils
     from DriverBuddyReloaded.callchain import transitive_callees
+    from DriverBuddyReloaded.reporting import Finding
 except Exception:  # pragma: no cover - only when imported outside IDA without stubs
     ida_funcs = None
+    idc = None
+    idautils = None
     transitive_callees = None
+    Finding = None
+
+
+def _inline_reach(case_ranges, opcode_findings):
+    """Per-case attribution for a monolithic dispatcher whose case does its work
+    inline (no callee handler to attribute to).  Scans the case's own address
+    span(s) for dangerous-sink call sites and inline privileged opcodes and returns
+    (sink_severity, {sink_names}, opcode_severity) found *within those spans*, so a
+    benign case is not tarred with sinks that only sibling cases reach.
+
+    *case_ranges* is a list of [lo, hi) spans: a single IOCTL can map to several
+    case bodies (e.g. a `goto`-shared port-I/O handler), and the attribution is the
+    union of them all.
+    """
+    sink_sev = 0
+    sink_names = set()
+    opc_sev = 0
+    for lo, hi in case_ranges:
+        for f in opcode_findings:
+            if f.ea and lo <= f.ea < hi:
+                opc_sev = max(opc_sev, f.severity)
+        if idc is None:
+            continue
+        try:
+            ea = lo
+            while ea != idc.BADADDR and ea < hi:
+                if idc.print_insn_mnem(ea) == "call":
+                    name = (idc.print_operand(ea, 0) or "").split(":")[-1]
+                    if name.startswith("__imp_"):
+                        name = name[len("__imp_"):]
+                    if name in sig.DANGEROUS_SINKS:
+                        sink_sev = max(sink_sev, sig.DANGEROUS_SINKS[name])
+                        sink_names.add(name)
+                nxt = idc.next_head(ea, hi)
+                if nxt <= ea:
+                    break
+                ea = nxt
+        except Exception:
+            pass
+    return sink_sev, sink_names, opc_sev
 
 
 def _points_to_severity(points):
@@ -110,39 +155,85 @@ def score(rep: Reporter) -> None:
         _opcode_reach_cache[handler_ea] = best
         return best
 
+    opcode_findings = rep.by_category("opcode")
+
     for f in ioctls:
         sev, reasons = score_ioctl(f.data)
-        # Attribute sinks to the IOCTL's own handler when the decoder resolved it,
-        # so a handler that reaches no sink is not tarred with sinks that only
-        # other cases of the same dispatcher reach.  Fall back to the dispatcher
-        # function otherwise, and mark that attribution as imprecise.
+        method_neither = f.data.get("method_name") == "METHOD_NEITHER"
         handler = f.data.get("handler_name")
-        attrib = handler or f.func
-        precise = handler is not None
-        entry = sink_by_func.get(attrib)
-        if entry:
-            sink_sev, sink_names = entry
+        handler_ea = f.data.get("handler_ea")
+        case_range = f.data.get("case_range")
+
+        if handler is not None:
+            # Precise per-case attribution: this IOCTL routes to a resolved handler.
+            attribution = "handler"
+            entry = sink_by_func.get(handler)
+            if entry and entry[0]:
+                sink_sev, sink_names = entry
+                sinks_sorted = sorted(sink_names)
+                reasons.extend("-> {}".format(s) for s in sinks_sorted)
+                f.data["sinks"] = sinks_sorted
+                f.detail += " | sinks: " + ", ".join(sinks_sorted)
+                sev = max(sev, sink_sev)
+                if method_neither:  # raw user pointer straight into a sink: worst case
+                    sev = config.SEV_CRITICAL
+            if handler_ea:
+                opc_sev = _opcode_reach_sev(handler_ea)
+                if opc_sev:
+                    sev = max(sev, opc_sev)
+                    reasons.append("-> privileged opcode/instruction")
+        elif case_range:
+            # Per-case inline attribution: attribute only sinks/opcodes that live
+            # inside this switch case's own body, not the whole dispatcher's union.
+            attribution = "case-inline"
+            sink_sev, sink_names, opc_sev = _inline_reach(case_range, opcode_findings)
             if sink_sev:
                 sinks_sorted = sorted(sink_names)
                 reasons.extend("-> {}".format(s) for s in sinks_sorted)
                 f.data["sinks"] = sinks_sorted
-                f.detail = f.detail + " | sinks{}: ".format(
-                    "" if precise else " (dispatcher-wide)") + ", ".join(sinks_sorted)
+                f.detail += " | sinks (in-case): " + ", ".join(sinks_sorted)
                 sev = max(sev, sink_sev)
-                # A raw-pointer IOCTL that also reaches a sink is the worst case.
-                if f.data.get("method_name") == "METHOD_NEITHER":
+                if method_neither:  # the sink is in THIS case: precise, so worst case
                     sev = config.SEV_CRITICAL
-        # Bump for a privileged inline primitive reachable from this handler
-        # (MSR access, port I/O, control-register move).
-        handler_ea = f.data.get("handler_ea")
-        if handler_ea:
-            opc_sev = _opcode_reach_sev(handler_ea)
             if opc_sev:
                 sev = max(sev, opc_sev)
-                reasons.append("-> privileged opcode/instruction")
-        f.data["sink_attribution"] = "handler" if precise else "dispatcher-wide"
+                reasons.append("-> privileged opcode/instruction (in-case)")
+        else:
+            # No per-case information (if-chain dispatcher, or immediate recovery):
+            # fall back to the dispatcher-wide sink union, but CAP the bump at HIGH
+            # and do NOT force CRITICAL -- the evidence is not attributable to this
+            # specific IOCTL, so it must not inflate every code to CRITICAL.
+            attribution = "dispatcher-wide"
+            entry = sink_by_func.get(f.func)
+            if entry and entry[0]:
+                sink_sev, sink_names = entry
+                sinks_sorted = sorted(sink_names)
+                reasons.extend("-> {}".format(s) for s in sinks_sorted)
+                f.data["sinks"] = sinks_sorted
+                f.detail += " | sinks (dispatcher-wide): " + ", ".join(sinks_sorted)
+                sev = max(sev, min(sink_sev, config.SEV_HIGH))
+
+        f.data["sink_attribution"] = attribution
         f.severity = config.clamp_severity(sev)
         f.data["risk_reasons"] = reasons
 
     high = sum(1 for f in ioctls if f.severity >= config.SEV_HIGH)
     rep.info("[>] Risk scoring: {} IOCTL(s) scored, {} High/Critical".format(len(ioctls), high))
+
+    # FN-2: a driver whose whole purpose is arbitrary MSR / physical-memory access
+    # (e.g. BS_RVSIO64) can carry a HIGH/CRITICAL inline primitive that no IOCTL was
+    # scored against, because the dispatcher-to-primitive path was not established.
+    # Surface a driver-level finding so the driver is not left looking benign.
+    if Finding is not None:
+        prim = [f for f in opcode_findings if f.severity >= config.SEV_HIGH]
+        if prim and max((f.severity for f in ioctls), default=0) < config.SEV_HIGH:
+            worst = max(prim, key=lambda f: f.severity)
+            rep.add(Finding(
+                category="heuristic",
+                title="Privileged primitive present; IOCTL linkage unconfirmed",
+                ea=worst.ea,
+                func=worst.func,
+                severity=config.SEV_HIGH,
+                detail="Driver contains a privileged inline primitive ({}) not linked "
+                       "to any scored IOCTL handler; review whether it is reachable "
+                       "from the dispatch surface.".format(worst.title)))
