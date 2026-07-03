@@ -2,13 +2,13 @@
   "tool": "DriverBuddyReloaded",
   "driver": "WinRing0x64.sys",
   "sha256": "11bd2c9f9e2397c9a16e0990e4ed2cf0679498fe0fd418a3dfdac60b5c160ee5",
-  "generated": "2026-07-03-1783060701",
+  "generated": "2026-07-03-1783074810",
   "severity_counts": {
-    "INFO": 3,
-    "MEDIUM": 5,
-    "CRITICAL": 24,
-    "HIGH": 10,
-    "LOW": 1
+    "INFO": 4,
+    "MEDIUM": 6,
+    "CRITICAL": 16,
+    "HIGH": 14,
+    "LOW": 3
   },
   "findings": [
     {
@@ -88,8 +88,8 @@
       "title": "IOCTL 0x9C406144",
       "ea": "0x11259",
       "func": "DispatchDeviceControl",
-      "severity": "CRITICAL",
-      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_READ_ACCESS [decompiler] | sinks (dispatcher-wide): HalGetBusDataByOffset, HalSetBusDataByOffset, MmMapIoSpace",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_READ_ACCESS [decompiler] | sinks (in-case): HalGetBusDataByOffset",
       "data": {
         "code": 2621464900,
         "device_name": "<UNKNOWN>",
@@ -99,16 +99,18 @@
         "method_code": 0,
         "access_name": "FILE_READ_ACCESS",
         "access_code": 1,
-        "sinks": [
-          "HalGetBusDataByOffset",
-          "HalSetBusDataByOffset",
-          "MmMapIoSpace"
+        "case_range": [
+          [
+            70466,
+            70579
+          ]
         ],
-        "sink_attribution": "dispatcher-wide",
+        "sinks": [
+          "HalGetBusDataByOffset"
+        ],
+        "sink_attribution": "case-inline",
         "risk_reasons": [
-          "-> HalGetBusDataByOffset",
-          "-> HalSetBusDataByOffset",
-          "-> MmMapIoSpace"
+          "-> HalGetBusDataByOffset"
         ]
       }
     },
@@ -118,7 +120,7 @@
       "ea": "0x11259",
       "func": "DispatchDeviceControl",
       "severity": "CRITICAL",
-      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_WRITE_ACCESS [decompiler] | sinks (dispatcher-wide): HalGetBusDataByOffset, HalSetBusDataByOffset, MmMapIoSpace",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_WRITE_ACCESS [decompiler]",
       "data": {
         "code": 2621481160,
         "device_name": "<UNKNOWN>",
@@ -128,17 +130,16 @@
         "method_code": 0,
         "access_name": "FILE_WRITE_ACCESS",
         "access_code": 2,
-        "sinks": [
-          "HalGetBusDataByOffset",
-          "HalSetBusDataByOffset",
-          "MmMapIoSpace"
+        "case_range": [
+          [
+            70419,
+            70462
+          ]
         ],
-        "sink_attribution": "dispatcher-wide",
+        "sink_attribution": "case-inline",
         "risk_reasons": [
           "FILE_WRITE_ACCESS (+1)",
-          "-> HalGetBusDataByOffset",
-          "-> HalSetBusDataByOffset",
-          "-> MmMapIoSpace"
+          "-> privileged opcode/instruction (in-case)"
         ]
       }
     },
@@ -148,7 +149,7 @@
       "ea": "0x11259",
       "func": "DispatchDeviceControl",
       "severity": "CRITICAL",
-      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_WRITE_ACCESS [decompiler] | sinks (dispatcher-wide): HalGetBusDataByOffset, HalSetBusDataByOffset, MmMapIoSpace",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_WRITE_ACCESS [decompiler]",
       "data": {
         "code": 2621481176,
         "device_name": "<UNKNOWN>",
@@ -158,17 +159,20 @@
         "method_code": 0,
         "access_name": "FILE_WRITE_ACCESS",
         "access_code": 2,
-        "sinks": [
-          "HalGetBusDataByOffset",
-          "HalSetBusDataByOffset",
-          "MmMapIoSpace"
+        "case_range": [
+          [
+            70419,
+            70462
+          ],
+          [
+            70457,
+            70462
+          ]
         ],
-        "sink_attribution": "dispatcher-wide",
+        "sink_attribution": "case-inline",
         "risk_reasons": [
           "FILE_WRITE_ACCESS (+1)",
-          "-> HalGetBusDataByOffset",
-          "-> HalSetBusDataByOffset",
-          "-> MmMapIoSpace"
+          "-> privileged opcode/instruction (in-case)"
         ]
       }
     },
@@ -178,7 +182,7 @@
       "ea": "0x11259",
       "func": "DispatchDeviceControl",
       "severity": "CRITICAL",
-      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_WRITE_ACCESS [decompiler] | sinks (dispatcher-wide): HalGetBusDataByOffset, HalSetBusDataByOffset, MmMapIoSpace",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_WRITE_ACCESS [decompiler]",
       "data": {
         "code": 2621481180,
         "device_name": "<UNKNOWN>",
@@ -188,17 +192,20 @@
         "method_code": 0,
         "access_name": "FILE_WRITE_ACCESS",
         "access_code": 2,
-        "sinks": [
-          "HalGetBusDataByOffset",
-          "HalSetBusDataByOffset",
-          "MmMapIoSpace"
+        "case_range": [
+          [
+            70419,
+            70462
+          ],
+          [
+            70446,
+            70453
+          ]
         ],
-        "sink_attribution": "dispatcher-wide",
+        "sink_attribution": "case-inline",
         "risk_reasons": [
           "FILE_WRITE_ACCESS (+1)",
-          "-> HalGetBusDataByOffset",
-          "-> HalSetBusDataByOffset",
-          "-> MmMapIoSpace"
+          "-> privileged opcode/instruction (in-case)"
         ]
       }
     },
@@ -208,7 +215,7 @@
       "ea": "0x11259",
       "func": "DispatchDeviceControl",
       "severity": "CRITICAL",
-      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_WRITE_ACCESS [decompiler] | sinks (dispatcher-wide): HalGetBusDataByOffset, HalSetBusDataByOffset, MmMapIoSpace",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_WRITE_ACCESS [decompiler]",
       "data": {
         "code": 2621481184,
         "device_name": "<UNKNOWN>",
@@ -218,17 +225,20 @@
         "method_code": 0,
         "access_name": "FILE_WRITE_ACCESS",
         "access_code": 2,
-        "sinks": [
-          "HalGetBusDataByOffset",
-          "HalSetBusDataByOffset",
-          "MmMapIoSpace"
+        "case_range": [
+          [
+            70419,
+            70462
+          ],
+          [
+            70437,
+            70442
+          ]
         ],
-        "sink_attribution": "dispatcher-wide",
+        "sink_attribution": "case-inline",
         "risk_reasons": [
           "FILE_WRITE_ACCESS (+1)",
-          "-> HalGetBusDataByOffset",
-          "-> HalSetBusDataByOffset",
-          "-> MmMapIoSpace"
+          "-> privileged opcode/instruction (in-case)"
         ]
       }
     },
@@ -237,8 +247,8 @@
       "title": "IOCTL 0x9C40A108",
       "ea": "0x11259",
       "func": "DispatchDeviceControl",
-      "severity": "CRITICAL",
-      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_WRITE_ACCESS [decompiler] | sinks (dispatcher-wide): HalGetBusDataByOffset, HalSetBusDataByOffset, MmMapIoSpace",
+      "severity": "LOW",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_WRITE_ACCESS [decompiler]",
       "data": {
         "code": 2621481224,
         "device_name": "<UNKNOWN>",
@@ -248,17 +258,15 @@
         "method_code": 0,
         "access_name": "FILE_WRITE_ACCESS",
         "access_code": 2,
-        "sinks": [
-          "HalGetBusDataByOffset",
-          "HalSetBusDataByOffset",
-          "MmMapIoSpace"
+        "case_range": [
+          [
+            70296,
+            70297
+          ]
         ],
-        "sink_attribution": "dispatcher-wide",
+        "sink_attribution": "case-inline",
         "risk_reasons": [
-          "FILE_WRITE_ACCESS (+1)",
-          "-> HalGetBusDataByOffset",
-          "-> HalSetBusDataByOffset",
-          "-> MmMapIoSpace"
+          "FILE_WRITE_ACCESS (+1)"
         ]
       }
     },
@@ -268,7 +276,7 @@
       "ea": "0x11259",
       "func": "DispatchDeviceControl",
       "severity": "CRITICAL",
-      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_WRITE_ACCESS [decompiler] | sinks (dispatcher-wide): HalGetBusDataByOffset, HalSetBusDataByOffset, MmMapIoSpace",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_WRITE_ACCESS [decompiler] | sinks (in-case): HalSetBusDataByOffset",
       "data": {
         "code": 2621481288,
         "device_name": "<UNKNOWN>",
@@ -278,17 +286,19 @@
         "method_code": 0,
         "access_name": "FILE_WRITE_ACCESS",
         "access_code": 2,
-        "sinks": [
-          "HalGetBusDataByOffset",
-          "HalSetBusDataByOffset",
-          "MmMapIoSpace"
+        "case_range": [
+          [
+            70309,
+            70412
+          ]
         ],
-        "sink_attribution": "dispatcher-wide",
+        "sinks": [
+          "HalSetBusDataByOffset"
+        ],
+        "sink_attribution": "case-inline",
         "risk_reasons": [
           "FILE_WRITE_ACCESS (+1)",
-          "-> HalGetBusDataByOffset",
-          "-> HalSetBusDataByOffset",
-          "-> MmMapIoSpace"
+          "-> HalSetBusDataByOffset"
         ]
       }
     },
@@ -298,7 +308,7 @@
       "ea": "0x1113c",
       "func": "DispatchDeviceControl",
       "severity": "CRITICAL",
-      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_READ_ACCESS [decompiler] | sinks (dispatcher-wide): HalGetBusDataByOffset, HalSetBusDataByOffset, MmMapIoSpace",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_READ_ACCESS [decompiler] | sinks (in-case): HalSetBusDataByOffset",
       "data": {
         "code": 2621464788,
         "device_name": "<UNKNOWN>",
@@ -308,16 +318,23 @@
         "method_code": 0,
         "access_name": "FILE_READ_ACCESS",
         "access_code": 1,
-        "sinks": [
-          "HalGetBusDataByOffset",
-          "HalSetBusDataByOffset",
-          "MmMapIoSpace"
+        "case_range": [
+          [
+            70025,
+            70404
+          ],
+          [
+            70062,
+            70213
+          ]
         ],
-        "sink_attribution": "dispatcher-wide",
+        "sinks": [
+          "HalSetBusDataByOffset"
+        ],
+        "sink_attribution": "case-inline",
         "risk_reasons": [
-          "-> HalGetBusDataByOffset",
           "-> HalSetBusDataByOffset",
-          "-> MmMapIoSpace"
+          "-> privileged opcode/instruction (in-case)"
         ]
       }
     },
@@ -326,8 +343,8 @@
       "title": "IOCTL 0x9C402000",
       "ea": "0x1113c",
       "func": "DispatchDeviceControl",
-      "severity": "CRITICAL",
-      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks (dispatcher-wide): HalGetBusDataByOffset, HalSetBusDataByOffset, MmMapIoSpace",
+      "severity": "LOW",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler]",
       "data": {
         "code": 2621448192,
         "device_name": "<UNKNOWN>",
@@ -337,17 +354,15 @@
         "method_code": 0,
         "access_name": "FILE_ANY_ACCESS",
         "access_code": 0,
-        "sinks": [
-          "HalGetBusDataByOffset",
-          "HalSetBusDataByOffset",
-          "MmMapIoSpace"
+        "case_range": [
+          [
+            70187,
+            70198
+          ]
         ],
-        "sink_attribution": "dispatcher-wide",
+        "sink_attribution": "case-inline",
         "risk_reasons": [
-          "FILE_ANY_ACCESS (+2)",
-          "-> HalGetBusDataByOffset",
-          "-> HalSetBusDataByOffset",
-          "-> MmMapIoSpace"
+          "FILE_ANY_ACCESS (+2)"
         ]
       }
     },
@@ -357,7 +372,7 @@
       "ea": "0x1113c",
       "func": "DispatchDeviceControl",
       "severity": "CRITICAL",
-      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks (dispatcher-wide): HalGetBusDataByOffset, HalSetBusDataByOffset, MmMapIoSpace",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks (in-case): HalGetBusDataByOffset, HalSetBusDataByOffset",
       "data": {
         "code": 2621448196,
         "device_name": "<UNKNOWN>",
@@ -367,17 +382,22 @@
         "method_code": 0,
         "access_name": "FILE_ANY_ACCESS",
         "access_code": 0,
+        "case_range": [
+          [
+            70163,
+            70648
+          ]
+        ],
         "sinks": [
           "HalGetBusDataByOffset",
-          "HalSetBusDataByOffset",
-          "MmMapIoSpace"
+          "HalSetBusDataByOffset"
         ],
-        "sink_attribution": "dispatcher-wide",
+        "sink_attribution": "case-inline",
         "risk_reasons": [
           "FILE_ANY_ACCESS (+2)",
           "-> HalGetBusDataByOffset",
           "-> HalSetBusDataByOffset",
-          "-> MmMapIoSpace"
+          "-> privileged opcode/instruction (in-case)"
         ]
       }
     },
@@ -399,6 +419,12 @@
         "access_code": 0,
         "handler_ea": 70760,
         "handler_name": "readmsr_wrapper",
+        "case_range": [
+          [
+            70134,
+            70159
+          ]
+        ],
         "sink_attribution": "handler",
         "risk_reasons": [
           "FILE_ANY_ACCESS (+2)",
@@ -424,6 +450,12 @@
         "access_code": 0,
         "handler_ea": 70812,
         "handler_name": "writemsr_wrapper",
+        "case_range": [
+          [
+            70105,
+            70130
+          ]
+        ],
         "sink_attribution": "handler",
         "risk_reasons": [
           "FILE_ANY_ACCESS (+2)",
@@ -449,6 +481,12 @@
         "access_code": 0,
         "handler_ea": 70864,
         "handler_name": "readpmc_wrapper",
+        "case_range": [
+          [
+            70076,
+            70101
+          ]
+        ],
         "sink_attribution": "handler",
         "risk_reasons": [
           "FILE_ANY_ACCESS (+2)",
@@ -461,8 +499,8 @@
       "title": "IOCTL 0x9C402090",
       "ea": "0x1113c",
       "func": "DispatchDeviceControl",
-      "severity": "CRITICAL",
-      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks (dispatcher-wide): HalGetBusDataByOffset, HalSetBusDataByOffset, MmMapIoSpace",
+      "severity": "MEDIUM",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler]",
       "data": {
         "code": 2621448336,
         "device_name": "<UNKNOWN>",
@@ -472,17 +510,16 @@
         "method_code": 0,
         "access_name": "FILE_ANY_ACCESS",
         "access_code": 0,
-        "sinks": [
-          "HalGetBusDataByOffset",
-          "HalSetBusDataByOffset",
-          "MmMapIoSpace"
+        "case_range": [
+          [
+            70070,
+            70071
+          ]
         ],
-        "sink_attribution": "dispatcher-wide",
+        "sink_attribution": "case-inline",
         "risk_reasons": [
           "FILE_ANY_ACCESS (+2)",
-          "-> HalGetBusDataByOffset",
-          "-> HalSetBusDataByOffset",
-          "-> MmMapIoSpace"
+          "-> privileged opcode/instruction (in-case)"
         ]
       }
     },
@@ -491,8 +528,8 @@
       "title": "IOCTL 0x9C4060C4",
       "ea": "0x1113c",
       "func": "DispatchDeviceControl",
-      "severity": "CRITICAL",
-      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_READ_ACCESS [decompiler] | sinks (dispatcher-wide): HalGetBusDataByOffset, HalSetBusDataByOffset, MmMapIoSpace",
+      "severity": "INFO",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_READ_ACCESS [decompiler]",
       "data": {
         "code": 2621464772,
         "device_name": "<UNKNOWN>",
@@ -502,17 +539,14 @@
         "method_code": 0,
         "access_name": "FILE_READ_ACCESS",
         "access_code": 1,
-        "sinks": [
-          "HalGetBusDataByOffset",
-          "HalSetBusDataByOffset",
-          "MmMapIoSpace"
+        "case_range": [
+          [
+            70019,
+            70020
+          ]
         ],
-        "sink_attribution": "dispatcher-wide",
-        "risk_reasons": [
-          "-> HalGetBusDataByOffset",
-          "-> HalSetBusDataByOffset",
-          "-> MmMapIoSpace"
-        ]
+        "sink_attribution": "case-inline",
+        "risk_reasons": []
       }
     },
     {
@@ -520,8 +554,8 @@
       "title": "IOCTL 0x9C4060CC",
       "ea": "0x1113c",
       "func": "DispatchDeviceControl",
-      "severity": "CRITICAL",
-      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_READ_ACCESS [decompiler] | sinks (dispatcher-wide): HalGetBusDataByOffset, HalSetBusDataByOffset, MmMapIoSpace",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_READ_ACCESS [decompiler]",
       "data": {
         "code": 2621464780,
         "device_name": "<UNKNOWN>",
@@ -531,16 +565,19 @@
         "method_code": 0,
         "access_name": "FILE_READ_ACCESS",
         "access_code": 1,
-        "sinks": [
-          "HalGetBusDataByOffset",
-          "HalSetBusDataByOffset",
-          "MmMapIoSpace"
+        "case_range": [
+          [
+            70019,
+            70020
+          ],
+          [
+            70206,
+            70208
+          ]
         ],
-        "sink_attribution": "dispatcher-wide",
+        "sink_attribution": "case-inline",
         "risk_reasons": [
-          "-> HalGetBusDataByOffset",
-          "-> HalSetBusDataByOffset",
-          "-> MmMapIoSpace"
+          "-> privileged opcode/instruction (in-case)"
         ]
       }
     },
@@ -549,8 +586,8 @@
       "title": "IOCTL 0x9C4060D0",
       "ea": "0x1113c",
       "func": "DispatchDeviceControl",
-      "severity": "CRITICAL",
-      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_READ_ACCESS [decompiler] | sinks (dispatcher-wide): HalGetBusDataByOffset, HalSetBusDataByOffset, MmMapIoSpace",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_READ_ACCESS [decompiler]",
       "data": {
         "code": 2621464784,
         "device_name": "<UNKNOWN>",
@@ -560,16 +597,19 @@
         "method_code": 0,
         "access_name": "FILE_READ_ACCESS",
         "access_code": 1,
-        "sinks": [
-          "HalGetBusDataByOffset",
-          "HalSetBusDataByOffset",
-          "MmMapIoSpace"
+        "case_range": [
+          [
+            70019,
+            70020
+          ],
+          [
+            70199,
+            70205
+          ]
         ],
-        "sink_attribution": "dispatcher-wide",
+        "sink_attribution": "case-inline",
         "risk_reasons": [
-          "-> HalGetBusDataByOffset",
-          "-> HalSetBusDataByOffset",
-          "-> MmMapIoSpace"
+          "-> privileged opcode/instruction (in-case)"
         ]
       }
     },
@@ -578,7 +618,7 @@
       "title": "IOCTL 0x9C406104",
       "ea": "0x1124e",
       "func": "DispatchDeviceControl",
-      "severity": "CRITICAL",
+      "severity": "HIGH",
       "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_READ_ACCESS [decompiler] | sinks (dispatcher-wide): HalGetBusDataByOffset, HalSetBusDataByOffset, MmMapIoSpace",
       "data": {
         "code": 2621464836,

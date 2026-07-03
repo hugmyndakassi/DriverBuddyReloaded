@@ -24,8 +24,9 @@ import idaapi
 import idautils
 import idc
 
-from DriverBuddyReloaded import config, ida_compat
+from DriverBuddyReloaded import config, ida_compat, signatures as sig
 from DriverBuddyReloaded.reporting import Finding
+from DriverBuddyReloaded.wdm import references_iocontrolcode
 
 
 def get_ioctl_code(ioctl_code):
@@ -268,6 +269,11 @@ _NTSTATUS_FALLBACK = {
     0x80000003,  # STATUS_BREAKPOINT
     0x80000004,  # STATUS_SINGLE_STEP
     0x8000000A,  # STATUS_NO_MEMORY
+    0x8000001A,  # STATUS_NO_MORE_ENTRIES
+    # STATUS_* error codes (0xC00000xx): the dense low range covers essentially
+    # every common failure code a dispatcher moves into a return register.  Some
+    # of these (e.g. 0xC000009A STATUS_INSUFFICIENT_RESOURCES, 0xC0000077
+    # STATUS_INVALID_ACL) were misdecoded as IOCTLs before this range existed.
     0xC0000001,  # STATUS_UNSUCCESSFUL
     0xC0000002,  # STATUS_NOT_IMPLEMENTED
     0xC0000003,  # STATUS_INVALID_INFO_CLASS
@@ -275,12 +281,23 @@ _NTSTATUS_FALLBACK = {
     0xC0000005,  # STATUS_ACCESS_VIOLATION
     0xC0000008,  # STATUS_INVALID_HANDLE
     0xC000000D,  # STATUS_INVALID_PARAMETER
+    0xC000000E,  # STATUS_NO_SUCH_DEVICE
     0xC0000010,  # STATUS_INVALID_DEVICE_REQUEST
+    0xC0000011,  # STATUS_END_OF_FILE
     0xC0000017,  # STATUS_NO_MEMORY
     0xC0000022,  # STATUS_ACCESS_DENIED
-    0xC000000E,  # STATUS_NO_SUCH_DEVICE
-    0xC00000BB,  # STATUS_NOT_SUPPORTED
+    0xC0000023,  # STATUS_BUFFER_TOO_SMALL
     0xC0000034,  # STATUS_OBJECT_NAME_NOT_FOUND
+    0xC000003A,  # STATUS_OBJECT_PATH_NOT_FOUND
+    0xC0000043,  # STATUS_SHARING_VIOLATION
+    0xC0000061,  # STATUS_PRIVILEGE_NOT_HELD
+    0xC0000077,  # STATUS_INVALID_ACL
+    0xC000009A,  # STATUS_INSUFFICIENT_RESOURCES
+    0xC00000A5,  # STATUS_BAD_IMPERSONATION_LEVEL
+    0xC00000BB,  # STATUS_NOT_SUPPORTED
+    0xC00000C0,  # STATUS_DEVICE_DOES_NOT_EXIST
+    0xC0000120,  # STATUS_CANCELLED
+    0xC0000225,  # STATUS_NOT_FOUND
 }
 
 
@@ -357,7 +374,8 @@ def _is_valid_ctl_code(value: int) -> bool:
 
 
 def _emit_ioctl(rep: Reporter, code: int, ea: int, func_name: str,
-                source: str, already_seen: set, handler_ea: int = None) -> bool:
+                source: str, already_seen: set, handler_ea: int = None,
+                case_range=None) -> bool:
     """Add one IOCTL Finding if `code` is a new, valid CTL_CODE.
 
     Returns True when a finding was added (the code was new and valid).  All
@@ -365,7 +383,9 @@ def _emit_ioctl(rep: Reporter, code: int, ea: int, func_name: str,
     applied uniformly regardless of how the code was recovered.  When the
     decoder resolved which handler the dispatcher routes this code to,
     `handler_ea` carries it so risk scoring can attribute sinks per-IOCTL
-    instead of per-dispatcher.
+    instead of per-dispatcher.  `case_range` (lo, hi) is the switch case's own
+    address span, so scoring can attribute an inline sink/opcode to the exact
+    case that contains it when the case does its work inline (no callee handler).
     """
     code &= 0xffffffff
     if code in already_seen or not _is_valid_ctl_code(code):
@@ -375,6 +395,10 @@ def _emit_ioctl(rep: Reporter, code: int, ea: int, func_name: str,
     if handler_ea is not None:
         d["handler_ea"] = handler_ea
         d["handler_name"] = ida_funcs.get_func_name(handler_ea) or ("sub_%X" % handler_ea)
+    if case_range is not None:
+        # case_range is a list of [lo, hi] spans (a code can map to several case
+        # bodies via goto-shared handlers); store them all for per-case scoring.
+        d["case_range"] = [[int(lo), int(hi)] for lo, hi in case_range]
     rep.add(Finding(
         category="ioctl",
         title="IOCTL 0x%08X" % code,
@@ -563,6 +587,46 @@ def _collect_hexrays_consts(func_ea: int):
                 pass
             return box[0]
 
+        def _case_ea_range(case_insn):
+            """(lo, hi) address span covered by a switch case body, so risk scoring
+            can attribute an inline sink/opcode to the specific case that contains
+            it -- rather than tarring every case of a monolithic dispatcher with the
+            union of all sinks the dispatcher reaches."""
+            lo = [None]
+            hi = [None]
+
+            def _upd(node):
+                try:
+                    ea = node.ea
+                except Exception:
+                    return
+                if ea is None or ea == idc.BADADDR:
+                    return
+                if lo[0] is None or ea < lo[0]:
+                    lo[0] = ea
+                if hi[0] is None or ea > hi[0]:
+                    hi[0] = ea
+
+            class _RR(ida_hexrays.ctree_visitor_t):
+                def __init__(self):
+                    ida_hexrays.ctree_visitor_t.__init__(self, CV_FAST)
+
+                def visit_expr(self, e):
+                    _upd(e)
+                    return 0
+
+                def visit_insn(self, i):
+                    _upd(i)
+                    return 0
+
+            try:
+                _RR().apply_to(case_insn, None)
+            except Exception:
+                pass
+            if lo[0] is None or hi[0] is None:
+                return None
+            return (lo[0], hi[0] + 1)  # +1 so the last instruction is inside [lo, hi)
+
         def _unwrap(node):
             while cot_cast is not None and node is not None and node.op == cot_cast:
                 node = node.x
@@ -609,8 +673,9 @@ def _collect_hexrays_consts(func_ea: int):
                         ea = _node_ea(ins, func_ea)
                         for case in sw.cases:
                             handler_ea = _case_handler_ea(case)
+                            crange = _case_ea_range(case)
                             for val in case.values:
-                                switch_cases.append((int(val) & 0xffffffff, ea, handler_ea))
+                                switch_cases.append((int(val) & 0xffffffff, ea, handler_ea, crange))
                 except Exception:
                     pass
                 return 0
@@ -619,12 +684,27 @@ def _collect_hexrays_consts(func_ea: int):
     except Exception:
         pass
 
-    found = list(switch_cases)  # (code, ea, handler_ea) triples
+    # Merge case labels that map to the same code.  A code can appear in more than
+    # one switch case -- e.g. WinRing0 dispatches 0x9C4060CC/D0 through a tiny
+    # `case ...: goto do_port_in;` stub whose body does the actual port I/O under a
+    # different case label.  The code's attribution must be the UNION of every case
+    # body it reaches, or an inline opcode/sink in the shared handler is missed and
+    # the IOCTL is wrongly scored benign.
+    merged = {}  # code -> {"ea": int, "handler_ea": int|None, "ranges": [[lo,hi],...]}
+    for code, ea, handler_ea, crange in switch_cases:
+        m = merged.setdefault(code, {"ea": ea, "handler_ea": None, "ranges": []})
+        if handler_ea is not None and m["handler_ea"] is None:
+            m["handler_ea"] = handler_ea
+        if crange is not None:
+            m["ranges"].append([int(crange[0]), int(crange[1])])
+    found = [(code, m["ea"], m["handler_ea"], m["ranges"] or None)
+             for code, m in merged.items()]
     for var_idx, code, ea in eq_candidates:
         # With a switch present, only trust comparisons against the selector
         # variable; without one, accept every comparison constant.
         if not switch_vars or (var_idx is not None and var_idx in switch_vars):
-            found.append((code, ea, None))  # if-chain comparison has no case body
+            # if-chain comparison: no switch case body to bound, so no case range.
+            found.append((code, ea, None, None))
     return found
 
 
@@ -681,19 +761,57 @@ def scan_dispatchers(rep: Reporter, ddc_addresses: List[int]) -> bool:
         emitted_here = False
         for source, candidates in structured:
             for cand in candidates:
-                # decompiler collector yields (code, ea, handler_ea);
+                # decompiler collector yields (code, ea, handler_ea, case_range);
                 # the switch-table collector yields (code, ea).
                 code, ea = cand[0], cand[1]
                 handler_ea = cand[2] if len(cand) > 2 else None
-                if _emit_ioctl(rep, code, ea, func_name, source, already_seen, handler_ea):
+                case_range = cand[3] if len(cand) > 3 else None
+                if _emit_ioctl(rep, code, ea, func_name, source, already_seen,
+                               handler_ea, case_range):
                     result = True
                     emitted_here = True
 
         if not emitted_here:
-            for code, ea in _collect_immediates(func_ea):
-                if _emit_ioctl(rep, code, ea, func_name, "dispatcher scan", already_seen):
-                    result = True
+            # The immediate-operand scan cannot tell an IOCTL from an NTSTATUS
+            # code, a pool tag, or a division magic constant, so only run it on a
+            # function that actually reads the IRP's IoControlCode.  This stops a
+            # CFG-misidentified library helper (e.g. RTCore's SepSddlGetAclForString)
+            # from leaking its internal constants as false-positive IOCTLs.
+            if references_iocontrolcode(func_ea):
+                for code, ea in _collect_immediates(func_ea):
+                    if _emit_ioctl(rep, code, ea, func_name, "dispatcher scan", already_seen):
+                        result = True
+            else:
+                rep.info("  [scan] no structured IOCTLs and no IoControlCode reference "
+                         "in 0x{:x}; skipping immediate scan".format(func_ea))
     return result
+
+
+def _call_target_name(call_ea: int) -> str:
+    """Best-effort callee name for a call instruction, stripping IDA's import
+    decoration (`cs:__imp_Name` / `cs:Name` -> `Name`)."""
+    op = idc.print_operand(call_ea, 0) or ""
+    op = op.split(":")[-1]
+    if op.startswith("__imp_"):
+        op = op[len("__imp_"):]
+    return op
+
+
+def _precedes_outbound_builder(ea: int, max_scan: int = 6) -> bool:
+    """True when the instruction at `ea` (which sets an IoControlCode immediate) is
+    shortly followed by a call to an OUTBOUND IOCTL builder -- i.e. the code is one
+    the driver *sends* downstream, not one it dispatches.  Observed on amp.sys:
+    `mov ecx, 70050h ; IoControlCode` then `call cs:IoBuildDeviceIoControlRequest`.
+    """
+    cur = ea
+    for _ in range(max_scan):
+        nxt = idc.next_head(cur)
+        if nxt in (None, idc.BADADDR) or nxt <= cur:
+            break
+        cur = nxt
+        if idc.print_insn_mnem(cur) == "call" and _call_target_name(cur) in sig.OUTBOUND_IOCTL_BUILDERS:
+            return True
+    return False
 
 
 def find_ioctls(rep: Reporter) -> bool:
@@ -721,6 +839,10 @@ def find_ioctls(rep: Reporter) -> bool:
                 continue
             ioctl_code = idc.get_operand_value(ea, opnd) & 0xffffffff
             if not _is_valid_ctl_code(ioctl_code):
+                continue
+            # Skip codes the driver sends downstream (IoBuildDeviceIoControlRequest
+            # etc.): those are outbound, not the driver's own dispatch surface.
+            if _precedes_outbound_builder(ea):
                 continue
             d = decode(ioctl_code)
             rep.add(Finding(

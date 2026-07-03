@@ -366,3 +366,17 @@ SYMLINK_CREATE_FUNCS = {
     "IoCreateUnprotectedSymbolicLink",  # NULL-DACL link: any user can delete/redirect it
     "WdfDeviceCreateSymbolicLink",      # KMDF symbolic-link creation
 }
+
+# APIs that *build/send* an IRP_MJ_DEVICE_CONTROL request to another driver.  An
+# IoControlCode immediate feeding one of these is an OUTBOUND code the driver
+# issues downstream (e.g. a disk IOCTL sent via the storage stack), NOT the
+# driver's own dispatch surface, so ioctl_decoder.find_ioctls() skips it to avoid
+# reporting outbound codes as attack surface (observed on amp.sys).
+OUTBOUND_IOCTL_BUILDERS = {
+    "IoBuildDeviceIoControlRequest",
+    "IoBuildAsynchronousFsdRequest",
+    "IoBuildSynchronousFsdRequest",
+    "ZwDeviceIoControlFile",
+    "NtDeviceIoControlFile",
+    "FltDeviceIoControlFile",
+}

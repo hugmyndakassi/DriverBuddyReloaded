@@ -94,20 +94,19 @@ function Invoke-IDA {
     param(
         [string]$IdaExe,
         [string]$DriverPath,
-        [string]$ResultJson,
         [string]$LogFile,
         [int]$TimeoutSec
     )
 
     # -A        autonomous (suppress all dialogs)
     # -L<file>  append IDA console output to <file> (no space between L and path)
-    # -S<...>   run <script> [arg...] after opening database (space-separated)
-    # The driver path is the positional argument.
+    # -S<script> run <script> after opening the database.
     #
-    # None of these paths contain spaces (repo root is C:\Users\c108\Documents\DriverBuddyReloaded,
-    # temp is under that).  If paths ever gain spaces the -S argument must be
-    # quoted differently -- IDA parses it as whitespace-separated tokens.
-    $sArg = '-S{0} {1}' -f $SmokeScript, $ResultJson
+    # We deliberately pass NO -S argument: PowerShell's Start-Process mangles a -S
+    # value that contains a space, and "<script> <resultpath>" has one.  ida_smoke.py
+    # instead derives its result path from the IDB (<idb>.smoke.json), exactly as the
+    # golden runner relies on.  The caller globs that file out of the temp dir.
+    $sArg = '-S{0}' -f $SmokeScript
     $lArg = '-L{0}' -f $LogFile
 
     try {
@@ -163,7 +162,6 @@ foreach ($driver in $TEST_DRIVERS) {
         Copy-Item -Path $driver.Path -Destination $driverCopy -Force
 
         $cellId     = "$($ida.Version)_$($driver.Name)"
-        $resultJson = Join-Path $ResultsDir "$cellId.json"
         $logFile    = Join-Path $ResultsDir "$cellId.log"
 
         Write-Host ("  IDA {0,-4}  {1,-10} ... " -f $ida.Version, $driver.Name) -NoNewline
@@ -171,16 +169,19 @@ foreach ($driver in $TEST_DRIVERS) {
         $exitCode = Invoke-IDA `
             -IdaExe     $ida.Exe `
             -DriverPath $driverCopy `
-            -ResultJson $resultJson `
             -LogFile    $logFile `
             -TimeoutSec $Timeout
 
-        # Parse the JSON summary written by ida_smoke.py.
+        # ida_smoke.py writes <idb>.smoke.json next to the driver copy; the exact
+        # IDB base name depends on the IDA version, so glob for it in the temp dir.
         $status  = 'no_result'
         $summary = $null
-        if (Test-Path $resultJson) {
+        $smokeJson = Get-ChildItem $tmpDir -Filter '*.smoke.json' -ErrorAction SilentlyContinue |
+                     Select-Object -First 1
+        if ($smokeJson) {
+            Copy-Item $smokeJson.FullName (Join-Path $ResultsDir "$cellId.json") -Force -ErrorAction SilentlyContinue
             try {
-                $json    = Get-Content $resultJson -Raw | ConvertFrom-Json
+                $json    = Get-Content $smokeJson.FullName -Raw | ConvertFrom-Json
                 $status  = $json.status
                 $summary = $json.summary
             }

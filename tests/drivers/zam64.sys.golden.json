@@ -1,0 +1,2304 @@
+{
+  "tool": "DriverBuddyReloaded",
+  "driver": "zam64.sys",
+  "sha256": "543991ca8d1c65113dff039b85ae3f9a87f503daec30f46929fd454bc57e5a91",
+  "generated": "2026-07-03-1783074810",
+  "severity_counts": {
+    "INFO": 6,
+    "HIGH": 94,
+    "LOW": 32,
+    "MEDIUM": 32
+  },
+  "findings": [
+    {
+      "category": "device_name",
+      "title": "\\Device\\B5A6B7C9-1E31-4E62-91CB-6078ED1E9A4F",
+      "ea": "0xfffff80541ab03b0",
+      "func": "",
+      "severity": "INFO",
+      "detail": "",
+      "data": {}
+    },
+    {
+      "category": "device_name",
+      "title": "\\Device\\ZemanaAntiMalware",
+      "ea": "0xfffff80541ab0300",
+      "func": "",
+      "severity": "INFO",
+      "detail": "",
+      "data": {}
+    },
+    {
+      "category": "device_name",
+      "title": "\\DosDevices\\B5A6B7C9-1E31-4E62-91CB-6078ED1E9A4F",
+      "ea": "0xfffff80541ab0340",
+      "func": "",
+      "severity": "INFO",
+      "detail": "",
+      "data": {}
+    },
+    {
+      "category": "device_name",
+      "title": "\\DosDevices\\ZemanaAntiMalware",
+      "ea": "0xfffff80541ab02c0",
+      "func": "",
+      "severity": "INFO",
+      "detail": "",
+      "data": {}
+    },
+    {
+      "category": "pooltag",
+      "title": "ANMZ",
+      "ea": null,
+      "func": "",
+      "severity": "INFO",
+      "detail": "Called by: ExFreePoolWithTag_wrapper, ExFreePoolWithTag_wrapper_0, HandleInformation, HlpAllocateAnsiString, HlpAllocateUnicodeString, HlpGetProcessImagePath, HlpGetSystemRootPath, HlpMatchUnicodeString, HlpUnicodeStringToWideString, IoctlDumpMiniportInformation, ZmnClnCopyFilesProcessor, ZmnClnProcessEntries, ZmnHmAddInlineHook, ZmnHmRemoveInlineHook, ZmnIoCopyFile, ZmnIoCreateFileBypassFilters, ZmnIoGetDriverObjectInformation, ZmnIoGetModuleInformationByAddress, ZmnIoGetModuleInformationByName, ZmnIoGetModuleInformationList, ZmnIoIsFileSystemDriverHooked, ZmnIoScsiGetMiniportInfectionType, ZmnPhEnumProcesses, ZmnPrAddEntry, ZmnRegDeleteKey, ZmnRegGetNameInformation, ZmnRegQueryValueKey, sub_FFFFF80541A99744, sub_FFFFF80541A9DEB8, sub_FFFFF80541AA371C",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff80541a92416",
+      "func": "sub_FFFFF80541A922D0",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff80541a951ab",
+      "func": "sub_FFFFF80541A95188",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff80541a951dc",
+      "func": "sub_FFFFF80541A951C0",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff80541a95202",
+      "func": "sub_FFFFF80541A951F8",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff80541a95308",
+      "func": "HlpAllocateAnsiString",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff80541a95436",
+      "func": "HlpAllocateUnicodeString",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff80541a95db9",
+      "func": "HlpUnicodeStringToWideString",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff80541a990f8",
+      "func": "HandleInformation",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff80541a997a8",
+      "func": "sub_FFFFF80541A99744",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff80541a997ec",
+      "func": "sub_FFFFF80541A99744",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff80541a99f86",
+      "func": "ZmnAuthRegisterProcess",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff80541a9a2e6",
+      "func": "ZmnClnCopyFilesProcessor",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff80541a9a745",
+      "func": "ZmnClnProcessEntries",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff80541a9ad18",
+      "func": "ZmnIoCreateFileBypassFilters",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff80541a9b782",
+      "func": "ZmnIoGetDriverObjectInformation",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff80541a9f255",
+      "func": "sub_FFFFF80541A9F1EC",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff80541a9f28a",
+      "func": "sub_FFFFF80541A9F1EC",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff80541a9f885",
+      "func": "IoctlDumpMiniportInformation",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff80541a9f9ab",
+      "func": "IoctlDumpMiniportInformation",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff80541a9fb32",
+      "func": "IoctlDumpMiniportInformation",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff80541a9fc04",
+      "func": "IoctlDumpMiniportInformation",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff80541aa22b8",
+      "func": "ZmnMfSendMessage",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff80541aa36a2",
+      "func": "ZmnPrAddEntry",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff80541aa4ab8",
+      "func": "ZmnSgBlockBootDrivers",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "PsCreateSystemThread",
+      "ea": "0xfffff80541a993c7",
+      "func": "sub_FFFFF80541A992C0",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ZwWriteFile",
+      "ea": "0xfffff80541a991dd",
+      "func": "HandleInformation",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ZwWriteFile",
+      "ea": "0xfffff80541a9ab96",
+      "func": "ZmnIoCopyFile",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "MmProbeAndLockPages",
+      "ea": "0xfffff80541a9ce3f",
+      "func": "ZmnIoScsiReadWriteDisk",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "IofCallDriver",
+      "ea": "0xfffff80541a9c25e",
+      "func": "ZmnIoQueryDirectoryFile",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ZwSetInformationFile",
+      "ea": "0xfffff80541a9c42f",
+      "func": "ZmnIoRemoveReadOnly",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ZwSetInformationFile",
+      "ea": "0xfffff80541a9d527",
+      "func": "ZmnIoSetFileAttributes",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "MmGetSystemRoutineAddress",
+      "ea": "0xfffff80541a9d91e",
+      "func": "sub_FFFFF80541A9D710",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "MmGetSystemRoutineAddress",
+      "ea": "0xfffff80541a9d931",
+      "func": "sub_FFFFF80541A9D710",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "MmGetSystemRoutineAddress",
+      "ea": "0xfffff80541a9d944",
+      "func": "sub_FFFFF80541A9D710",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "MmGetSystemRoutineAddress",
+      "ea": "0xfffff80541a9d957",
+      "func": "sub_FFFFF80541A9D710",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "MmGetSystemRoutineAddress",
+      "ea": "0xfffff80541a9d96a",
+      "func": "sub_FFFFF80541A9D710",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "MmGetSystemRoutineAddress",
+      "ea": "0xfffff80541a9d97d",
+      "func": "sub_FFFFF80541A9D710",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "MmGetSystemRoutineAddress",
+      "ea": "0xfffff80541aa23b1",
+      "func": "ZmnMfSetProcessCreateNotifyRoutine",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "MmGetSystemRoutineAddress",
+      "ea": "0xfffff80541aa41fd",
+      "func": "ZmnPgBlockOpenProcess64",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "MmGetSystemRoutineAddress",
+      "ea": "0xfffff80541aa430b",
+      "func": "sub_FFFFF80541AA42D4",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "MmMapLockedPagesSpecifyCache",
+      "ea": "0xfffff80541aa1700",
+      "func": "sub_FFFFF80541AA165C",
+      "severity": "HIGH",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ZwTerminateProcess",
+      "ea": "0xfffff80541aa3487",
+      "func": "ZmnPhTerminateProcessById",
+      "severity": "HIGH",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "RtlCreateRegistryKey",
+      "ea": "0xfffff80541aa398a",
+      "func": "ZmnRegCreateKey",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ProbeForWrite",
+      "ea": "0xfffff80541aa4d2c",
+      "func": "sub_FFFFF80541AA4CE8",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ProbeForWrite",
+      "ea": "0xfffff80541aa4d5b",
+      "func": "sub_FFFFF80541AA4CE8",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ZwCreateFile",
+      "ea": "0xfffff80541a9588a",
+      "func": "HlpGetSystemRootPath",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ZwCreateFile",
+      "ea": "0xfffff80541a99174",
+      "func": "HandleInformation",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ZwCreateFile",
+      "ea": "0xfffff80541a9c02e",
+      "func": "ZmnIoOpenPhysicalDrive",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ObReferenceObjectByHandle",
+      "ea": "0xfffff80541a9590e",
+      "func": "HlpGetSystemRootPath",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ObReferenceObjectByHandle",
+      "ea": "0xfffff80541a99406",
+      "func": "sub_FFFFF80541A992C0",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ObReferenceObjectByHandle",
+      "ea": "0xfffff80541a9aa55",
+      "func": "ZmnIoCopyFile",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ObReferenceObjectByHandle",
+      "ea": "0xfffff80541a9ae6d",
+      "func": "ZmnIoCreateFileBypassFilters",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ObReferenceObjectByHandle",
+      "ea": "0xfffff80541a9c115",
+      "func": "ZmnIoQueryDirectoryFile",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ObReferenceObjectByHandle",
+      "ea": "0xfffff80541a9e7aa",
+      "func": "ZmnHmNeutralizeWatchdogs",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ObReferenceObjectByHandle",
+      "ea": "0xfffff80541aa28b6",
+      "func": "ZmnPhEnumProcessModulesById",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ProbeForRead",
+      "ea": "0xfffff80541a95ad5",
+      "func": "sub_FFFFF80541A95AA4",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x80002024",
+      "ea": "0xfffff80541aa07cf",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491876,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2057,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193028457
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x80002028",
+      "ea": "0xfffff80541aa07cf",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491880,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2058,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193028407
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x8000202C",
+      "ea": "0xfffff80541aa07cf",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491884,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2059,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193028357
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x80002030",
+      "ea": "0xfffff80541aa07cf",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491888,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2060,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193028310
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x80002034",
+      "ea": "0xfffff80541aa07cf",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491892,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2061,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193028260
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x80002038",
+      "ea": "0xfffff80541aa07cf",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491896,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2062,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193028210
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x8000203C",
+      "ea": "0xfffff80541aa07cf",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491900,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2063,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193028160
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x80002020",
+      "ea": "0xfffff80541aa05e8",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491872,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2056,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193028040
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x80002004",
+      "ea": "0xfffff80541aa05e8",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491844,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2049,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193027986
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x80002008",
+      "ea": "0xfffff80541aa05e8",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491848,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2050,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193027936
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x8000200C",
+      "ea": "0xfffff80541aa05e8",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491852,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2051,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193027889
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x80002010",
+      "ea": "0xfffff80541aa05e8",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491856,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2052,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193027842
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x80002014",
+      "ea": "0xfffff80541aa05e8",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491860,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2053,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193027795
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x80002018",
+      "ea": "0xfffff80541aa05e8",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491864,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2054,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193027745
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x8000201C",
+      "ea": "0xfffff80541aa05e8",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491868,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2055,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193027993
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x80002064",
+      "ea": "0xfffff80541aa0b72",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491940,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2073,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193029332
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x80002080",
+      "ea": "0xfffff80541aa0b72",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491968,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2080,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193029287
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x80002084",
+      "ea": "0xfffff80541aa0b72",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491972,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2081,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193029196
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x80002088",
+      "ea": "0xfffff80541aa0b72",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491976,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2082,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300193001488,
+        "handler_name": "ZmnAuthSetProcessLastBeat",
+        "case_range": [
+          [
+            18446735300193029138,
+            18446735300193029141
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x8000208C",
+      "ea": "0xfffff80541aa0b72",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491980,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2083,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193029321
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x80002090",
+      "ea": "0xfffff80541aa0b72",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491984,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2084,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193029321
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x80002094",
+      "ea": "0xfffff80541aa0b72",
+      "func": "DispatchDeviceControl",
+      "severity": "LOW",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler]",
+      "data": {
+        "code": 2147491988,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2085,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "case_range": [
+          [
+            18446735300193029081,
+            18446735300193029082
+          ]
+        ],
+        "sink_attribution": "case-inline",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x80002060",
+      "ea": "0xfffff80541aa09a9",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491936,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2072,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193029321
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x80002044",
+      "ea": "0xfffff80541aa09a9",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491908,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2065,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193028943
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x80002048",
+      "ea": "0xfffff80541aa09a9",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491912,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2066,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193028896
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x8000204C",
+      "ea": "0xfffff80541aa09a9",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491916,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2067,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193028843
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x80002050",
+      "ea": "0xfffff80541aa09a9",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491920,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2068,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193028793
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x80002054",
+      "ea": "0xfffff80541aa09a9",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491924,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2069,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193028740
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x80002058",
+      "ea": "0xfffff80541aa09a9",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491928,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2070,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193028701
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x8000205C",
+      "ea": "0xfffff80541aa09a9",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks: memmove",
+      "data": {
+        "code": 2147491932,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2071,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "handler_ea": 18446735300192998476,
+        "handler_name": "Logger",
+        "case_range": [
+          [
+            18446735300193027292,
+            18446735300193028654
+          ]
+        ],
+        "sinks": [
+          "memmove"
+        ],
+        "sink_attribution": "handler",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x80002040",
+      "ea": "0xfffff80541aa05d5",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "<UNKNOWN> / METHOD_BUFFERED / FILE_ANY_ACCESS [decompiler] | sinks (dispatcher-wide): PsLookupProcessByProcessId, ZwOpenProcess, ZwTerminateProcess, memmove",
+      "data": {
+        "code": 2147491904,
+        "device_name": "<UNKNOWN>",
+        "device_code": 32768,
+        "function": 2064,
+        "method_name": "METHOD_BUFFERED",
+        "method_code": 0,
+        "access_name": "FILE_ANY_ACCESS",
+        "access_code": 0,
+        "sinks": [
+          "PsLookupProcessByProcessId",
+          "ZwOpenProcess",
+          "ZwTerminateProcess",
+          "memmove"
+        ],
+        "sink_attribution": "dispatcher-wide",
+        "risk_reasons": [
+          "FILE_ANY_ACCESS (+2)",
+          "-> PsLookupProcessByProcessId",
+          "-> ZwOpenProcess",
+          "-> ZwTerminateProcess",
+          "-> memmove"
+        ]
+      }
+    },
+    {
+      "category": "acl",
+      "title": "IoCreateDevice: world-accessible by default",
+      "ea": "0xfffff80541aa11fa",
+      "func": "DriverInit",
+      "severity": "LOW",
+      "detail": "IoCreateDevice assigns no security descriptor; accessible to all users. Consider IoCreateDeviceSecure with a restrictive SDDL.",
+      "data": {}
+    },
+    {
+      "category": "symlink",
+      "title": "IoCreateSymbolicLink: \\Device\\ZemanaAntiMalware",
+      "ea": "0xfffff80541aa124e",
+      "func": "DriverInit",
+      "severity": "INFO",
+      "detail": "Symbolic link exposes device to Win32 namespace; verify DACL on the target device object.",
+      "data": {}
+    },
+    {
+      "category": "callchain",
+      "title": "Logger reaches memmove",
+      "ea": "0xfffff80541a9944c",
+      "func": "Logger",
+      "severity": "HIGH",
+      "detail": "Logger -> sub_FFFFF80541A99744 -> memmove",
+      "data": {
+        "sink": "memmove",
+        "path": [
+          "Logger",
+          "sub_FFFFF80541A99744",
+          "memmove"
+        ]
+      }
+    },
+    {
+      "category": "callchain",
+      "title": "DispatchDeviceControl reaches memmove",
+      "ea": "0xfffff80541aa04bc",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "DispatchDeviceControl -> IoctlDumpMiniportInformation -> memmove",
+      "data": {
+        "sink": "memmove",
+        "path": [
+          "DispatchDeviceControl",
+          "IoctlDumpMiniportInformation",
+          "memmove"
+        ]
+      }
+    },
+    {
+      "category": "callchain",
+      "title": "DispatchDeviceControl reaches ZwTerminateProcess",
+      "ea": "0xfffff80541aa04bc",
+      "func": "DispatchDeviceControl",
+      "severity": "HIGH",
+      "detail": "DispatchDeviceControl -> ZmnPhTerminateProcessById_wrapper -> ZmnPhTerminateProcessById -> ZwTerminateProcess",
+      "data": {
+        "sink": "ZwTerminateProcess",
+        "path": [
+          "DispatchDeviceControl",
+          "ZmnPhTerminateProcessById_wrapper",
+          "ZmnPhTerminateProcessById",
+          "ZwTerminateProcess"
+        ]
+      }
+    },
+    {
+      "category": "callchain",
+      "title": "DispatchDeviceControl reaches PsLookupProcessByProcessId",
+      "ea": "0xfffff80541aa04bc",
+      "func": "DispatchDeviceControl",
+      "severity": "MEDIUM",
+      "detail": "DispatchDeviceControl -> ZmnAuthRegisterProcess_wrapper -> ZmnAuthRegisterProcess -> PsLookupProcessByProcessId",
+      "data": {
+        "sink": "PsLookupProcessByProcessId",
+        "path": [
+          "DispatchDeviceControl",
+          "ZmnAuthRegisterProcess_wrapper",
+          "ZmnAuthRegisterProcess",
+          "PsLookupProcessByProcessId"
+        ]
+      }
+    },
+    {
+      "category": "callchain",
+      "title": "DispatchDeviceControl reaches ZwOpenProcess",
+      "ea": "0xfffff80541aa04bc",
+      "func": "DispatchDeviceControl",
+      "severity": "MEDIUM",
+      "detail": "DispatchDeviceControl -> ZmnPhTerminateProcessById_wrapper -> ZmnPhTerminateProcessById -> HlpIsCriticalSystemProcess -> ZwOpenProcess",
+      "data": {
+        "sink": "ZwOpenProcess",
+        "path": [
+          "DispatchDeviceControl",
+          "ZmnPhTerminateProcessById_wrapper",
+          "ZmnPhTerminateProcessById",
+          "HlpIsCriticalSystemProcess",
+          "ZwOpenProcess"
+        ]
+      }
+    },
+    {
+      "category": "callchain",
+      "title": "ZmnAuthSetProcessLastBeat reaches memmove",
+      "ea": "0xfffff80541a9a010",
+      "func": "ZmnAuthSetProcessLastBeat",
+      "severity": "HIGH",
+      "detail": "ZmnAuthSetProcessLastBeat -> Logger -> sub_FFFFF80541A99744 -> memmove",
+      "data": {
+        "sink": "memmove",
+        "path": [
+          "ZmnAuthSetProcessLastBeat",
+          "Logger",
+          "sub_FFFFF80541A99744",
+          "memmove"
+        ]
+      }
+    },
+    {
+      "category": "heuristic",
+      "title": "Unvalidated copy: memmove",
+      "ea": "0xfffff80541a9ad18",
+      "func": "ZmnIoCreateFileBypassFilters",
+      "severity": "HIGH",
+      "detail": "No validation call found in 20-back/6-forward window",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Unvalidated copy: RtlAppendUnicodeToString",
+      "ea": "0xfffff80541a9b358",
+      "func": "ZmnIoGetDeviceObjectForPhysicalDrive",
+      "severity": "HIGH",
+      "detail": "No validation call found in 20-back/6-forward window",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Unvalidated copy: RtlAppendUnicodeToString",
+      "ea": "0xfffff80541a9bf6f",
+      "func": "ZmnIoOpenPhysicalDrive",
+      "severity": "HIGH",
+      "detail": "No validation call found in 20-back/6-forward window",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Unvalidated copy: memmove",
+      "ea": "0xfffff80541a92416",
+      "func": "sub_FFFFF80541A922D0",
+      "severity": "HIGH",
+      "detail": "No validation call found in 20-back/6-forward window",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Unvalidated copy: memmove",
+      "ea": "0xfffff80541a95436",
+      "func": "HlpAllocateUnicodeString",
+      "severity": "HIGH",
+      "detail": "No validation call found in 20-back/6-forward window",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Unvalidated copy: memmove",
+      "ea": "0xfffff80541a95db9",
+      "func": "HlpUnicodeStringToWideString",
+      "severity": "HIGH",
+      "detail": "No validation call found in 20-back/6-forward window",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Unvalidated copy: memmove",
+      "ea": "0xfffff80541aa36a2",
+      "func": "ZmnPrAddEntry",
+      "severity": "HIGH",
+      "detail": "No validation call found in 20-back/6-forward window",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Unvalidated copy: memmove",
+      "ea": "0xfffff80541a9b782",
+      "func": "ZmnIoGetDriverObjectInformation",
+      "severity": "HIGH",
+      "detail": "No validation call found in 20-back/6-forward window",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Unvalidated copy: memmove",
+      "ea": "0xfffff80541a99f86",
+      "func": "ZmnAuthRegisterProcess",
+      "severity": "HIGH",
+      "detail": "No validation call found in 20-back/6-forward window",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Unvalidated copy: memmove",
+      "ea": "0xfffff80541a9f885",
+      "func": "IoctlDumpMiniportInformation",
+      "severity": "HIGH",
+      "detail": "No validation call found in 20-back/6-forward window",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Unvalidated copy: memmove",
+      "ea": "0xfffff80541a9f9ab",
+      "func": "IoctlDumpMiniportInformation",
+      "severity": "HIGH",
+      "detail": "No validation call found in 20-back/6-forward window",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Unvalidated copy: memmove",
+      "ea": "0xfffff80541a9fb32",
+      "func": "IoctlDumpMiniportInformation",
+      "severity": "HIGH",
+      "detail": "No validation call found in 20-back/6-forward window",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Unvalidated copy: memmove",
+      "ea": "0xfffff80541a9fc04",
+      "func": "IoctlDumpMiniportInformation",
+      "severity": "HIGH",
+      "detail": "No validation call found in 20-back/6-forward window",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Ungated privileged op: ZwOpenProcess",
+      "ea": "0xfffff80541a9f0f7",
+      "func": "ZmnHmZwOpenProcess",
+      "severity": "HIGH",
+      "detail": "Reachable from dispatcher DispatchDeviceControl with no privilege check on the path",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Ungated privileged op: ZwOpenProcess",
+      "ea": "0xfffff80541a959e8",
+      "func": "HlpIsCriticalSystemProcess",
+      "severity": "HIGH",
+      "detail": "Reachable from dispatcher DispatchDeviceControl with no privilege check on the path",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Ungated privileged op: ZwTerminateProcess",
+      "ea": "0xfffff80541aa3487",
+      "func": "ZmnPhTerminateProcessById",
+      "severity": "HIGH",
+      "detail": "Reachable from dispatcher DispatchDeviceControl with no privilege check on the path",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "MDL user-page op: IoAllocateMdl",
+      "ea": "0xfffff80541a9cdfa",
+      "func": "ZmnIoScsiReadWriteDisk",
+      "severity": "MEDIUM",
+      "detail": "call    cs:IoAllocateMdl",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "MDL user-page op: MmProbeAndLockPages",
+      "ea": "0xfffff80541a9ce3f",
+      "func": "ZmnIoScsiReadWriteDisk",
+      "severity": "MEDIUM",
+      "detail": "call    cs:MmProbeAndLockPages",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "MDL user-page op: IoFreeMdl",
+      "ea": "0xfffff80541a9d225",
+      "func": "ZmnIoScsiReadWriteDisk",
+      "severity": "MEDIUM",
+      "detail": "call    cs:IoFreeMdl",
+      "data": {}
+    },
+    {
+      "category": "opcode",
+      "title": "Control/debug register access",
+      "ea": "0xfffff80541a9cee8",
+      "func": "ZmnIoScsiReadWriteDisk",
+      "severity": "HIGH",
+      "detail": "mov     rax, cr8",
+      "data": {}
+    },
+    {
+      "category": "opcode",
+      "title": "Control/debug register access",
+      "ea": "0xfffff80541a9cef7",
+      "func": "ZmnIoScsiReadWriteDisk",
+      "severity": "HIGH",
+      "detail": "mov     cr8, r14",
+      "data": {}
+    },
+    {
+      "category": "opcode",
+      "title": "Control/debug register access",
+      "ea": "0xfffff80541a9d144",
+      "func": "ZmnIoScsiReadWriteDisk",
+      "severity": "HIGH",
+      "detail": "mov     cr8, rax",
+      "data": {}
+    },
+    {
+      "category": "opcode",
+      "title": "Control/debug register access",
+      "ea": "0xfffff80541a95ddc",
+      "func": "clearCR0Bit",
+      "severity": "HIGH",
+      "detail": "mov     rax, cr0",
+      "data": {}
+    },
+    {
+      "category": "opcode",
+      "title": "Control/debug register access",
+      "ea": "0xfffff80541a95de4",
+      "func": "clearCR0Bit",
+      "severity": "HIGH",
+      "detail": "mov     cr0, rax",
+      "data": {}
+    },
+    {
+      "category": "opcode",
+      "title": "Control/debug register access",
+      "ea": "0xfffff80541a95de8",
+      "func": "toggleCR0Bit16",
+      "severity": "HIGH",
+      "detail": "mov     rax, cr0",
+      "data": {}
+    },
+    {
+      "category": "opcode",
+      "title": "Control/debug register access",
+      "ea": "0xfffff80541a95df0",
+      "func": "toggleCR0Bit16",
+      "severity": "HIGH",
+      "detail": "mov     cr0, rax",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Controlled pointer write",
+      "ea": "0xfffff80541a9b94d",
+      "func": "ZmnIoGetModuleInformationByAddress",
+      "severity": "MEDIUM",
+      "detail": "Value read through one pointer stored through another `*p = *q`; review whether the destination is attacker-controlled",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Controlled pointer write",
+      "ea": "0xfffff80541a9b99b",
+      "func": "ZmnIoGetModuleInformationByAddress",
+      "severity": "MEDIUM",
+      "detail": "Value read through one pointer stored through another `*p = *q`; review whether the destination is attacker-controlled",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Controlled pointer write",
+      "ea": "0xfffff80541a9b9aa",
+      "func": "ZmnIoGetModuleInformationByAddress",
+      "severity": "MEDIUM",
+      "detail": "Value read through one pointer stored through another `*p = *q`; review whether the destination is attacker-controlled",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Controlled pointer write",
+      "ea": "0xfffff80541a9f45c",
+      "func": "IoctlCheckDriverDispatchRoutines",
+      "severity": "MEDIUM",
+      "detail": "Value read through one pointer stored through another `*p = *q`; review whether the destination is attacker-controlled",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Controlled pointer write",
+      "ea": "0xfffff80541a9e1a8",
+      "func": "ZmnHmFixInlineHook",
+      "severity": "MEDIUM",
+      "detail": "Value read through one pointer stored through another `*p = *q`; review whether the destination is attacker-controlled",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Controlled pointer write",
+      "ea": "0xfffff80541a9ffe2",
+      "func": "IoctlGetKernelImageInformation",
+      "severity": "MEDIUM",
+      "detail": "Value read through one pointer stored through another `*p = *q`; review whether the destination is attacker-controlled",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Controlled pointer write",
+      "ea": "0xfffff80541aa002b",
+      "func": "IoctlGetKernelImageInformation",
+      "severity": "MEDIUM",
+      "detail": "Value read through one pointer stored through another `*p = *q`; review whether the destination is attacker-controlled",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Controlled pointer write",
+      "ea": "0xfffff80541a9fd71",
+      "func": "IoctlFixCriticalKernelFunctions",
+      "severity": "MEDIUM",
+      "detail": "Value read through one pointer stored through another `*p = *q`; review whether the destination is attacker-controlled",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Controlled pointer write",
+      "ea": "0xfffff80541a9fdba",
+      "func": "IoctlFixCriticalKernelFunctions",
+      "severity": "MEDIUM",
+      "detail": "Value read through one pointer stored through another `*p = *q`; review whether the destination is attacker-controlled",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Controlled pointer write",
+      "ea": "0xfffff80541a9cd63",
+      "func": "ZmnIoScsiReadWriteDisk",
+      "severity": "MEDIUM",
+      "detail": "Value read through one pointer stored through another `*p = *q`; review whether the destination is attacker-controlled",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Controlled pointer write",
+      "ea": "0xfffff80541a9ce9d",
+      "func": "ZmnIoScsiReadWriteDisk",
+      "severity": "MEDIUM",
+      "detail": "Value read through one pointer stored through another `*p = *q`; review whether the destination is attacker-controlled",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Controlled pointer write",
+      "ea": "0xfffff80541a9cf21",
+      "func": "ZmnIoScsiReadWriteDisk",
+      "severity": "MEDIUM",
+      "detail": "Value read through one pointer stored through another `*p = *q`; review whether the destination is attacker-controlled",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Arbitrary write (write-what-where)",
+      "ea": "0xfffff80541a9d057",
+      "func": "ZmnIoScsiReadWriteDisk",
+      "severity": "HIGH",
+      "detail": "Store through a double-dereferenced (user-controlled) pointer `*(*p) = c`; verify the destination is validated",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Controlled pointer write",
+      "ea": "0xfffff80541a9f8a1",
+      "func": "IoctlDumpMiniportInformation",
+      "severity": "MEDIUM",
+      "detail": "Value read through one pointer stored through another `*p = *q`; review whether the destination is attacker-controlled",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Controlled pointer write",
+      "ea": "0xfffff80541a9f9c5",
+      "func": "IoctlDumpMiniportInformation",
+      "severity": "MEDIUM",
+      "detail": "Value read through one pointer stored through another `*p = *q`; review whether the destination is attacker-controlled",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Controlled pointer write",
+      "ea": "0xfffff80541a9f9cf",
+      "func": "IoctlDumpMiniportInformation",
+      "severity": "MEDIUM",
+      "detail": "Value read through one pointer stored through another `*p = *q`; review whether the destination is attacker-controlled",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Controlled pointer write",
+      "ea": "0xfffff80541a9f9d9",
+      "func": "IoctlDumpMiniportInformation",
+      "severity": "MEDIUM",
+      "detail": "Value read through one pointer stored through another `*p = *q`; review whether the destination is attacker-controlled",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Controlled pointer write",
+      "ea": "0xfffff80541a9f9e4",
+      "func": "IoctlDumpMiniportInformation",
+      "severity": "MEDIUM",
+      "detail": "Value read through one pointer stored through another `*p = *q`; review whether the destination is attacker-controlled",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Controlled pointer write",
+      "ea": "0xfffff80541a9f9eb",
+      "func": "IoctlDumpMiniportInformation",
+      "severity": "MEDIUM",
+      "detail": "Value read through one pointer stored through another `*p = *q`; review whether the destination is attacker-controlled",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Controlled pointer write",
+      "ea": "0xfffff80541a9fa47",
+      "func": "IoctlDumpMiniportInformation",
+      "severity": "MEDIUM",
+      "detail": "Value read through one pointer stored through another `*p = *q`; review whether the destination is attacker-controlled",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Controlled pointer write",
+      "ea": "0xfffff80541a9fa51",
+      "func": "IoctlDumpMiniportInformation",
+      "severity": "MEDIUM",
+      "detail": "Value read through one pointer stored through another `*p = *q`; review whether the destination is attacker-controlled",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Controlled pointer write",
+      "ea": "0xfffff80541a9fa5e",
+      "func": "IoctlDumpMiniportInformation",
+      "severity": "MEDIUM",
+      "detail": "Value read through one pointer stored through another `*p = *q`; review whether the destination is attacker-controlled",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Controlled pointer write",
+      "ea": "0xfffff80541a9fa67",
+      "func": "IoctlDumpMiniportInformation",
+      "severity": "MEDIUM",
+      "detail": "Value read through one pointer stored through another `*p = *q`; review whether the destination is attacker-controlled",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Controlled pointer write",
+      "ea": "0xfffff80541a9fb05",
+      "func": "IoctlDumpMiniportInformation",
+      "severity": "MEDIUM",
+      "detail": "Value read through one pointer stored through another `*p = *q`; review whether the destination is attacker-controlled",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Controlled pointer write",
+      "ea": "0xfffff80541a9fbda",
+      "func": "IoctlDumpMiniportInformation",
+      "severity": "MEDIUM",
+      "detail": "Value read through one pointer stored through another `*p = *q`; review whether the destination is attacker-controlled",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Controlled pointer write",
+      "ea": "0xfffff80541a9bc2b",
+      "func": "ZmnIoGetModuleInformationByName",
+      "severity": "MEDIUM",
+      "detail": "Value read through one pointer stored through another `*p = *q`; review whether the destination is attacker-controlled",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Controlled pointer write",
+      "ea": "0xfffff80541a9bc74",
+      "func": "ZmnIoGetModuleInformationByName",
+      "severity": "MEDIUM",
+      "detail": "Value read through one pointer stored through another `*p = *q`; review whether the destination is attacker-controlled",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Controlled pointer write",
+      "ea": "0xfffff80541a9bc83",
+      "func": "ZmnIoGetModuleInformationByName",
+      "severity": "MEDIUM",
+      "detail": "Value read through one pointer stored through another `*p = *q`; review whether the destination is attacker-controlled",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Allocation without size validation: ExAllocatePoolWithTag",
+      "ea": "0xfffff80541a9b8ae",
+      "func": "ZmnIoGetModuleInformationByAddress",
+      "severity": "HIGH",
+      "detail": "No safe-arithmetic guard near pool alloc in IOCTL handler",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Allocation without size validation: ExAllocatePoolWithTag",
+      "ea": "0xfffff80541a9acc9",
+      "func": "ZmnIoCreateFileBypassFilters",
+      "severity": "HIGH",
+      "detail": "No safe-arithmetic guard near pool alloc in IOCTL handler",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Allocation without size validation: ExAllocatePoolWithTag",
+      "ea": "0xfffff80541aa2d11",
+      "func": "ZmnPhEnumProcesses",
+      "severity": "HIGH",
+      "detail": "No safe-arithmetic guard near pool alloc in IOCTL handler",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Allocation without size validation: ExAllocatePoolWithTag",
+      "ea": "0xfffff80541a9bcf3",
+      "func": "ZmnIoGetModuleInformationList",
+      "severity": "HIGH",
+      "detail": "No safe-arithmetic guard near pool alloc in IOCTL handler",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Allocation without size validation: ExAllocatePoolWithTag",
+      "ea": "0xfffff80541a953cb",
+      "func": "HlpAllocateUnicodeString",
+      "severity": "HIGH",
+      "detail": "No safe-arithmetic guard near pool alloc in IOCTL handler",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Allocation without size validation: ExAllocatePoolWithTag",
+      "ea": "0xfffff80541a95d6b",
+      "func": "HlpUnicodeStringToWideString",
+      "severity": "HIGH",
+      "detail": "No safe-arithmetic guard near pool alloc in IOCTL handler",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Allocation without size validation: ExAllocatePoolWithTag",
+      "ea": "0xfffff80541aa364b",
+      "func": "ZmnPrAddEntry",
+      "severity": "HIGH",
+      "detail": "No safe-arithmetic guard near pool alloc in IOCTL handler",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Allocation without size validation: ExAllocatePoolWithTag",
+      "ea": "0xfffff80541a9d646",
+      "func": "ZmnHmAddInlineHook",
+      "severity": "HIGH",
+      "detail": "No safe-arithmetic guard near pool alloc in IOCTL handler",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Allocation without size validation: ExAllocatePoolWithTag",
+      "ea": "0xfffff80541a9b630",
+      "func": "ZmnIoGetDriverObjectInformation",
+      "severity": "HIGH",
+      "detail": "No safe-arithmetic guard near pool alloc in IOCTL handler",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Allocation without size validation: ExAllocatePoolWithTag",
+      "ea": "0xfffff80541a9ba72",
+      "func": "ZmnIoGetModuleInformationByName",
+      "severity": "HIGH",
+      "detail": "No safe-arithmetic guard near pool alloc in IOCTL handler",
+      "data": {}
+    }
+  ]
+}

@@ -1,0 +1,508 @@
+{
+  "tool": "DriverBuddyReloaded",
+  "driver": "amp.sys",
+  "sha256": "cbb8239a765bf5b2c1b6a5c8832d2cab8fef5deacadfb65d8ed43ef56d291ab6",
+  "generated": "2026-07-03-1783074809",
+  "severity_counts": {
+    "INFO": 13,
+    "HIGH": 15,
+    "LOW": 21,
+    "MEDIUM": 3
+  },
+  "findings": [
+    {
+      "category": "device_name",
+      "title": "\\??\\A:",
+      "ea": "0xfffff80068923150",
+      "func": "",
+      "severity": "INFO",
+      "detail": "",
+      "data": {}
+    },
+    {
+      "category": "device_name",
+      "title": "\\??\\C:\\",
+      "ea": "0xfffff80068923710",
+      "func": "",
+      "severity": "INFO",
+      "detail": "",
+      "data": {}
+    },
+    {
+      "category": "device_name",
+      "title": "\\??\\C:\\AmpLogs_",
+      "ea": "0xfffff80068922c60",
+      "func": "",
+      "severity": "INFO",
+      "detail": "",
+      "data": {}
+    },
+    {
+      "category": "device_name",
+      "title": "\\??\\PhysicalDrive",
+      "ea": "0xfffff80068923570",
+      "func": "",
+      "severity": "INFO",
+      "detail": "",
+      "data": {}
+    },
+    {
+      "category": "device_name",
+      "title": "\\??\\PhysicalDrive0",
+      "ea": "0xfffff80068921900",
+      "func": "",
+      "severity": "INFO",
+      "detail": "",
+      "data": {}
+    },
+    {
+      "category": "device_name",
+      "title": "\\Device\\AMP",
+      "ea": "0xfffff800689236d8",
+      "func": "",
+      "severity": "INFO",
+      "detail": "",
+      "data": {}
+    },
+    {
+      "category": "device_name",
+      "title": "\\Device\\NwRdr\\",
+      "ea": "0xfffff80068923130",
+      "func": "",
+      "severity": "INFO",
+      "detail": "",
+      "data": {}
+    },
+    {
+      "category": "device_name",
+      "title": "\\DosDevices\\AMP",
+      "ea": "0xfffff800689236f0",
+      "func": "",
+      "severity": "INFO",
+      "detail": "",
+      "data": {}
+    },
+    {
+      "category": "pooltag",
+      "title": "CmfR",
+      "ea": null,
+      "func": "",
+      "severity": "INFO",
+      "detail": "Called by: sub_FFFFF80068902070, sub_FFFFF80068902270",
+      "data": {}
+    },
+    {
+      "category": "pooltag",
+      "title": "DmsA",
+      "ea": null,
+      "func": "",
+      "severity": "INFO",
+      "detail": "Called by: sub_FFFFF80068901000, sub_FFFFF80068901D90, sub_FFFFF800689024C0, sub_FFFFF80068902750, sub_FFFFF80068902800, sub_FFFFF80068902930, sub_FFFFF80068902DF0, sub_FFFFF80068904210, sub_FFFFF80068905B90",
+      "data": {}
+    },
+    {
+      "category": "pooltag",
+      "title": "LmfR",
+      "ea": null,
+      "func": "",
+      "severity": "INFO",
+      "detail": "Called by: sub_FFFFF80068902070",
+      "data": {}
+    },
+    {
+      "category": "pooltag",
+      "title": "bLmA",
+      "ea": null,
+      "func": "",
+      "severity": "INFO",
+      "detail": "Called by: sub_FFFFF8006891C180",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff8006890590d",
+      "func": "sub_FFFFF80068905820",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff800689091eb",
+      "func": "sub_FFFFF800689090E0",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff80068911997",
+      "func": "sub_FFFFF800689116E0",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff8006891b327",
+      "func": "sub_FFFFF8006891B240",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff8006891f5b8",
+      "func": "sub_FFFFF8006891F390",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff8006891f7d1",
+      "func": "sub_FFFFF8006891F6E0",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff8006891f93f",
+      "func": "sub_FFFFF8006891F840",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff8006891fa4a",
+      "func": "sub_FFFFF8006891F840",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff8006891fb65",
+      "func": "sub_FFFFF8006891F840",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff8006891fc73",
+      "func": "sub_FFFFF8006891F840",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff8006891fd87",
+      "func": "sub_FFFFF8006891F840",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff8006891feb4",
+      "func": "sub_FFFFF8006891F840",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff80068920034",
+      "func": "sub_FFFFF8006891F840",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "memmove",
+      "ea": "0xfffff80068920128",
+      "func": "sub_FFFFF8006891F840",
+      "severity": "HIGH",
+      "detail": "C/C++ function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "MmGetSystemRoutineAddress",
+      "ea": "0xfffff8006891aeb5",
+      "func": "sub_FFFFF8006891AE50",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ZwSetInformationFile",
+      "ea": "0xfffff80068918f75",
+      "func": "sub_FFFFF80068918F30",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ZwSetInformationFile",
+      "ea": "0xfffff80068919057",
+      "func": "sub_FFFFF80068918FC0",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ZwWriteFile",
+      "ea": "0xfffff800689118e8",
+      "func": "sub_FFFFF800689116E0",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ZwWriteFile",
+      "ea": "0xfffff80068918da9",
+      "func": "sub_FFFFF80068918CF0",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ObReferenceObjectByHandle",
+      "ea": "0xfffff8006891239a",
+      "func": "sub_FFFFF80068911E20",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ObReferenceObjectByHandle",
+      "ea": "0xfffff80068912d39",
+      "func": "sub_FFFFF80068912CE0",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ObReferenceObjectByHandle",
+      "ea": "0xfffff80068912d72",
+      "func": "sub_FFFFF80068912CE0",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ObReferenceObjectByHandle",
+      "ea": "0xfffff800689136d6",
+      "func": "sub_FFFFF80068913580",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ObReferenceObjectByHandle",
+      "ea": "0xfffff80068918714",
+      "func": "sub_FFFFF80068918620",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ObReferenceObjectByHandle",
+      "ea": "0xfffff80068918a64",
+      "func": "sub_FFFFF800689187E0",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "PsCreateSystemThread",
+      "ea": "0xfffff8006891368e",
+      "func": "sub_FFFFF80068913580",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "IofCallDriver",
+      "ea": "0xfffff8006891b4f9",
+      "func": "sub_FFFFF8006891B410",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "IofCallDriver",
+      "ea": "0xfffff8006891b65f",
+      "func": "sub_FFFFF8006891B550",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "IofCallDriver",
+      "ea": "0xfffff8006891b82b",
+      "func": "sub_FFFFF8006891B700",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "IofCallDriver",
+      "ea": "0xfffff8006891bb51",
+      "func": "sub_FFFFF8006891B9F0",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ZwLoadDriver",
+      "ea": "0xfffff8006891c54b",
+      "func": "jmp6",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ZwUnloadDriver",
+      "ea": "0xfffff8006891c32f",
+      "func": "sub_FFFFF8006891C2F0",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ZwUnloadDriver",
+      "ea": "0xfffff8006891c52b",
+      "func": "jmp6",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "flagged_function",
+      "title": "ZwCreateFile",
+      "ea": "0xfffff8006891da21",
+      "func": "sub_FFFFF8006891D840",
+      "severity": "LOW",
+      "detail": "WinAPI function",
+      "data": {}
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x00226003",
+      "ea": "0xfffff8006891c5d1",
+      "func": "DispatchDeviceControl",
+      "severity": "MEDIUM",
+      "detail": "FILE_DEVICE_UNKNOWN / METHOD_NEITHER / FILE_READ_ACCESS [decompiler]",
+      "data": {
+        "code": 2252803,
+        "device_name": "FILE_DEVICE_UNKNOWN",
+        "device_code": 34,
+        "function": 2048,
+        "method_name": "METHOD_NEITHER",
+        "method_code": 3,
+        "access_name": "FILE_READ_ACCESS",
+        "access_code": 1,
+        "sink_attribution": "dispatcher-wide",
+        "risk_reasons": [
+          "METHOD_NEITHER (+3)"
+        ]
+      }
+    },
+    {
+      "category": "ioctl",
+      "title": "IOCTL 0x00226403",
+      "ea": "0xfffff8006891ced1",
+      "func": "DispatchInternalDeviceControl",
+      "severity": "MEDIUM",
+      "detail": "FILE_DEVICE_UNKNOWN / METHOD_NEITHER / FILE_READ_ACCESS [decompiler]",
+      "data": {
+        "code": 2253827,
+        "device_name": "FILE_DEVICE_UNKNOWN",
+        "device_code": 34,
+        "function": 2304,
+        "method_name": "METHOD_NEITHER",
+        "method_code": 3,
+        "access_name": "FILE_READ_ACCESS",
+        "access_code": 1,
+        "sink_attribution": "dispatcher-wide",
+        "risk_reasons": [
+          "METHOD_NEITHER (+3)"
+        ]
+      }
+    },
+    {
+      "category": "acl",
+      "title": "IoCreateDevice: world-accessible by default",
+      "ea": "0xfffff8006891d09f",
+      "func": "DriverCreateDevice",
+      "severity": "LOW",
+      "detail": "IoCreateDevice assigns no security descriptor; accessible to all users. Consider IoCreateDeviceSecure with a restrictive SDDL.",
+      "data": {}
+    },
+    {
+      "category": "symlink",
+      "title": "IoCreateSymbolicLink: \\DosDevices\\AMP",
+      "ea": "0xfffff8006891d0f4",
+      "func": "DriverCreateDevice",
+      "severity": "INFO",
+      "detail": "Symbolic link exposes device to Win32 namespace; verify DACL on the target device object.",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "Arbitrary write (write-what-where)",
+      "ea": "0xfffff80068906ca5",
+      "func": "jmptable",
+      "severity": "HIGH",
+      "detail": "Store through a double-dereferenced (user-controlled) pointer `*(*p) = c`; verify the destination is validated",
+      "data": {}
+    },
+    {
+      "category": "heuristic",
+      "title": "TOCTOU double-fetch: [rbx+8] read at 0xfffff80068906c7a and 0xfffff80068906c89 without intervening ProbeForRead",
+      "ea": "0xfffff80068906c7a",
+      "func": "jmptable",
+      "severity": "MEDIUM",
+      "detail": "0xfffff80068906c7a -> 0xfffff80068906c89; user-pointer field re-read with no ProbeForRead/ProbeForWrite between",
+      "data": {}
+    }
+  ]
+}

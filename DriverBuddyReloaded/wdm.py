@@ -30,6 +30,108 @@ def _operand_targets_offset(op_text, offset_tag):
     return offset_tag in (op_text or "")
 
 
+def references_iocontrolcode(func_ea):
+    """True when *func_ea* loads the IO_STACK_LOCATION from the IRP (IRP+0B8h) and
+    then reads the control code at iostack+18h.
+
+    This is the structural signature of an IRP_MJ_DEVICE_CONTROL dispatcher.  It
+    corroborates CFG-guessed dispatch candidates (so statically-linked library /
+    CRT helpers such as SepSddlGetAclForString or __GSHandlerCheckCommon are not
+    mistaken for dispatchers) and gates the low-precision immediate-operand IOCTL
+    scan so it never mines a non-dispatcher's internal constants.
+    """
+    try:
+        items = list(idautils.FuncItems(func_ea))
+    except Exception:
+        return False
+    iostack_read = "0xDEADB33F"  # sentinel that cannot appear before an iostack load
+    saw_iostack = False
+    for i in items:
+        try:
+            disasm = ida_compat.disasm_text(i) or ""
+            # Annotated form (database already carries IRP / IO_STACK_LOCATION
+            # struct types, e.g. from a prior run): the operands render as struct
+            # fields.  "IoControlCode" is the decisive one; "CurrentStackLocation"
+            # is the iostack load.
+            if "IoControlCode" in disasm:
+                return True
+            if "CurrentStackLocation" in disasm:
+                saw_iostack = True
+            # Raw form (pristine database): IRP.Tail.Overlay.CurrentStackLocation
+            # load dst reg <- [irp+0B8h], then the control code at [iostack+18h].
+            if "+0B8h" in disasm:
+                saw_iostack = True
+                iostack_reg = idc.print_operand(i, 0)
+                if iostack_reg:
+                    iostack_read = "[" + iostack_reg + "+18h]"
+            # +18h control-code read is the strongest raw signal; the iostack load
+            # alone is already a strong dispatcher hallmark, so accept it too
+            # (lenient enough not to drop a real dispatcher whose control-code read
+            # uses a forwarded register).
+            if iostack_read in disasm:
+                return True
+        except Exception:
+            continue
+    return saw_iostack
+
+
+def _resolve_store_target(store_ea, prev_ea):
+    """Resolve the handler address stored into a MajorFunction slot.
+
+    Handles the two shapes compilers emit:
+      lea rax, Handler / mov [reg+0E0h], rax    (target on the previous `lea`)
+      mov [reg+0E0h], offset Handler            (target is the store's own source)
+    Returns the handler function EA or None.
+    """
+    _BAD = (None, ida_compat.BADADDR, idaapi.BADADDR)
+    if prev_ea is not None and idc.print_insn_mnem(prev_ea) == "lea":
+        ea = idc.get_name_ea_simple(idc.print_operand(prev_ea, 1))
+        if ea not in _BAD and idaapi.get_func(ea):
+            return ea
+    name_ea = idc.get_name_ea_simple(idc.print_operand(store_ea, 1))
+    if name_ea not in _BAD and idaapi.get_func(name_ea):
+        return name_ea
+    if idc.get_operand_type(store_ea, 1) in (idc.o_imm, idc.o_mem, idc.o_near, idc.o_far):
+        val = idc.get_operand_value(store_ea, 1)
+        if val not in _BAD and idaapi.get_func(val):
+            return val
+    return None
+
+
+def find_majorfunction_dispatchers(rep):
+    """Binary-wide scan for stores into DRIVER_OBJECT.MajorFunction[IRP_MJ_DEVICE_CONTROL]
+    (+0E0h) and [IRP_MJ_INTERNAL_DEVICE_CONTROL] (+0E8h); returns a de-duplicated list of
+    resolved handler EAs.
+
+    This is the primary dispatcher source.  Unlike locate_ddc (which scans only the
+    DriverEntry body and only runs for WDM drivers), it works regardless of driver type
+    (minifilter / WDF included) and regardless of whether the MajorFunction assignment
+    lives in DriverEntry or in a helper it calls -- both cases the entry-only scan misses
+    (e.g. zam64's DriverInit, amp's DriverCreateDevice).
+    """
+    handlers = []
+    seen = set()
+    for f in idautils.Functions():
+        prev = None
+        for i in idautils.FuncItems(f):
+            op0 = idc.print_operand(i, 0) or ""
+            if _operand_targets_offset(op0, _DDC_OFFSET):
+                tag = "DispatchDeviceControl"
+            elif _operand_targets_offset(op0, _DIDC_OFFSET):
+                tag = "DispatchInternalDeviceControl"
+            else:
+                prev = i
+                continue
+            target = _resolve_store_target(i, prev)
+            if target is not None and target not in seen:
+                seen.add(target)
+                idc.set_name(target, tag)
+                rep.info("[+] Found `{}` at 0x{:08x}".format(tag, target))
+                handlers.append(target)
+            prev = i
+    return handlers
+
+
 def check_for_fake_driver_entry(driver_entry_address, rep):
     """
     Checks if DriverEntry in WDM driver is fake and try to recover the real one
@@ -296,7 +398,8 @@ def find_dispatch_function(rep):
     cfg_funcs = find_dispatch_by_cfg()
     excluded_functions = [
         "__security_check_cookie", "start", "DriverEntry", "Real_Driver_Entry",
-        "__GSHandlerCheck_SEH", "GsDriverEntry",
+        "__GSHandlerCheck_SEH", "__GSHandlerCheck", "__GSHandlerCheckCommon",
+        "GsDriverEntry",
         "_guard_xfg_dispatch_icall_nop", "_guard_xfg_dispatch_icall",
         "_guard_dispatch_icall_nop", "_guard_dispatch_icall",
     ]
@@ -326,9 +429,21 @@ def find_dispatch_function(rep):
                 rep.info("\t- {}".format(i))
                 candidates.append(i)
 
+    # Resolve candidate names to EAs, skipping library functions.  We do NOT hard-
+    # filter here on references_iocontrolcode: on a database that already carries
+    # struct annotations (e.g. a prior DBR run), the real dispatcher's control-code
+    # read renders as an IO_STACK_LOCATION field rather than a raw offset, and a
+    # strict text gate would wrongly drop it.  A non-dispatcher that slips through
+    # (e.g. SepSddlGetAclForString) is harmless: it yields no structured IOCTLs and
+    # scan_dispatchers gates its low-precision immediate scan on the same
+    # IoControlCode-reference check, so it produces no findings.
     eas = []
     for name in candidates:
         ea = idc.get_name_ea_simple(name)
-        if ea not in (None, ida_compat.BADADDR):
-            eas.append(ea)
+        if ea in (None, ida_compat.BADADDR):
+            continue
+        if idc.get_func_flags(ea) & idc.FUNC_LIB:
+            rep.info("[!] Skipping dispatch candidate {} (library function)".format(name))
+            continue
+        eas.append(ea)
     return eas

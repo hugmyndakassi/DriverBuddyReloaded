@@ -182,21 +182,39 @@ def main():
     check(sev_neither == config.SEV_HIGH, "NEITHER+ANY scores HIGH")
     check(sev_buffered < config.SEV_HIGH, "BUFFERED+ANY below HIGH")
 
-    # sink bump promotes NEITHER handler to CRITICAL
+    # sink bump promotes a NEITHER handler to CRITICAL when the sink is attributed
+    # to the IOCTL's own resolved handler (precise attribution).
     rep = reporting.Reporter()
     rep.add_finding("device_name", r"\DosDevices\Stub")
     for code in (0x222000, 0x222003):
+        d = ioctl_decoder.decode(code)
+        d["handler_name"] = "DispatchDeviceControl"  # precise per-IOCTL handler
         rep.add_finding("ioctl", "IOCTL 0x%08X" % code, ea=0x14000000 + code,
-                        func="DispatchDeviceControl", **ioctl_decoder.decode(code))
+                        func="DispatchDeviceControl", **d)
     rep.add_finding("callchain", "handler -> memcpy", func="DispatchDeviceControl",
                     severity=config.SEV_HIGH, detail="sink: memcpy", sink="memcpy")
     scoring.score(rep)
     crit = next((f for f in rep.by_category("ioctl") if f.data["code"] == 0x222003), None)
     check(crit is not None, "critical ioctl finding exists")
     if crit is not None:
-        check(crit.severity == config.SEV_CRITICAL, "NEITHER + sink => CRITICAL")
+        check(crit.severity == config.SEV_CRITICAL, "NEITHER + sink (precise) => CRITICAL")
         check(crit.data.get("sinks") == ["memcpy"], "sink name stored in finding data")
         check("memcpy" in crit.detail, "sink name visible in detail")
+
+    # FP-4: a NEITHER IOCTL with only DISPATCHER-WIDE sink evidence (no resolved
+    # per-case handler) must be capped at HIGH, never forced to CRITICAL -- the
+    # sink is not attributable to this specific code.
+    rep_dw = reporting.Reporter()
+    rep_dw.add_finding("ioctl", "IOCTL 0x00222003", ea=0x90000 + 0x222003,
+                       func="DispatchDeviceControl", **ioctl_decoder.decode(0x222003))
+    rep_dw.add_finding("callchain", "d -> MmMapIoSpace", func="DispatchDeviceControl",
+                       severity=config.SEV_CRITICAL, detail="", sink="MmMapIoSpace")
+    scoring.score(rep_dw)
+    dw = rep_dw.by_category("ioctl")[0]
+    check(dw.severity == config.SEV_HIGH,
+          "FP-4: dispatcher-wide NEITHER+CRITICAL-sink capped at HIGH")
+    check(dw.data.get("sink_attribution") == "dispatcher-wide",
+          "FP-4: attribution marked dispatcher-wide")
 
     # ---- T8: Reporter drops byte-identical duplicate findings ----
     rep_dedup = reporting.Reporter()
@@ -259,6 +277,19 @@ def main():
     check(_is_valid_ctl_code(0x0022e004),  "T2: 0x0022e004 valid (vendor device type)")
     check(not _is_valid_ctl_code(0xFFFFFFFF), "T2: 0xFFFFFFFF invalid (== -1 sentinel)")
     check(_is_valid_ctl_code(0x9C402604),  "T2: 0x9C402604 valid (ALSysIO vendor IOCTL)")
+    # FP-3: expanded NTSTATUS fallback now rejects the codes the RTCore eval hit,
+    # while genuine vendor IOCTLs with 0x8000+/0x9C40 device types still pass.
+    check(not _is_valid_ctl_code(0xC000009A), "FP-3: 0xC000009A rejected (STATUS_INSUFFICIENT_RESOURCES)")
+    check(not _is_valid_ctl_code(0xC0000077), "FP-3: 0xC0000077 rejected (STATUS_INVALID_ACL)")
+    check(_is_valid_ctl_code(0x80002004),  "FP-3: 0x80002004 valid (zam64/RTCore vendor IOCTL)")
+    check(_is_valid_ctl_code(0x9C402000),  "FP-3: 0x9C402000 valid (MODAPI vendor IOCTL)")
+
+    # ---- FP-1: outbound IOCTL-builder set exists and covers the request builders ----
+    from DriverBuddyReloaded import signatures as _sig_ob
+    check("IoBuildDeviceIoControlRequest" in _sig_ob.OUTBOUND_IOCTL_BUILDERS,
+          "FP-1: IoBuildDeviceIoControlRequest is a known outbound builder")
+    check("FltDeviceIoControlFile" in _sig_ob.OUTBOUND_IOCTL_BUILDERS,
+          "FP-1: FltDeviceIoControlFile is a known outbound builder")
 
     # ---- T3: check_irql emits finding when IRQL-raiser and Zw* call coexist ----
     # FuncItems returns [0x30000, 0x30004].

@@ -7,6 +7,102 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.0] - 2026-07-03
+
+Detection-accuracy pass driven by an evaluation against eight known-vulnerable
+drivers (BS_RVSIO64, LgCoreTemp, MODAPI, RTCore64, SSPORT, amp, dbutil_2_3,
+zam64), with every false positive and false negative confirmed in the binary.
+Dispatch discovery now covers non-WDM drivers, IOCTL provenance and severity are
+attributed per-IOCTL, and several false-positive classes are removed. The severity
+changes intentionally alter findings, so the `HEVD`/`WinRing0x64` goldens were
+re-baselined and new goldens added.
+
+### Added
+
+- `wdm.find_majorfunction_dispatchers()`: binary-wide scan for stores into
+  `MajorFunction[IRP_MJ_DEVICE_CONTROL]` (`+0E0h`) / `[..._INTERNAL_...]` (`+0E8h`),
+  now the **primary** DDC source. It works for every driver type and finds the
+  handler even when the `MajorFunction` assignment lives in a helper rather than
+  `DriverEntry`, so a minifilter/WDF driver that also exposes a legacy control
+  device is fully analysed (zam64: 0 -> 31 IOCTLs recovered, with call-chain and
+  heuristics unblocked). `locate_ddc()` and the CFG-guess `find_dispatch_function()`
+  become fallbacks used only when the store scan finds nothing.
+- `wdm.references_iocontrolcode()`: corroboration predicate - true when a function
+  loads the IRP's `IO_STACK_LOCATION` (`+0B8h`) and reads the control code
+  (`+18h`). Robust to both raw offsets and struct-annotated operands
+  (`IoControlCode` / `CurrentStackLocation`).
+- `signatures.OUTBOUND_IOCTL_BUILDERS` + `ioctl_decoder._precedes_outbound_builder()`:
+  `find_ioctls()` now excludes IOCTL codes the driver *sends* downstream
+  (`IoBuildDeviceIoControlRequest`, `ZwDeviceIoControlFile`, `FltDeviceIoControlFile`,
+  ...) so outbound codes are not reported as the driver's own dispatch surface
+  (amp: 5 outbound disk-IOCTL false positives removed).
+- Per-case severity attribution: `_collect_hexrays_consts()` records each switch
+  case's handler EA and its address span(s) - `finding.data['case_range']`, a
+  *list* of `[lo,hi)` spans merged across `goto`-shared case labels so a code that
+  reaches its work through a shared handler (e.g. WinRing0's `0x9C4060CC/D0` port
+  I/O) is still attributed. `scoring.score()` uses these to attribute danger to the
+  specific IOCTL.
+- Driver-level `heuristic` finding "Privileged primitive present; IOCTL linkage
+  unconfirmed": emitted when a HIGH/CRITICAL inline primitive (wrmsr/rdmsr/port I/O)
+  exists but no IOCTL scored HIGH+, so an arbitrary-MSR/physmem driver whose
+  dispatcher-to-primitive path was not established (e.g. BS_RVSIO64) is not left
+  looking benign.
+- New golden regressions in `tests/drivers/`: `zam64` (minifilter + control
+  device), `amp` (outbound-IOCTL filter), `MODAPI` (monolithic multi-case
+  dispatcher) - covering the failure modes the existing clean single-dispatcher
+  WDM goldens (beep/HEVD/ALSysIO64/WinRing0x64) did not. Seven new pure-Python
+  regression checks in `tests/test_dbr.py` (79 total).
+
+### Changed
+
+- `utils.get_driver_id()`: DDC discovery now runs for **every** driver type, not
+  only WDM. Previously it was gated inside the WDM fall-through branch, so a
+  Mini-Filter / WDF / Stream / AVStream / PortCls driver returned with
+  `ctx.ddc_addresses` empty and the entire IOCTL / call-chain / heuristic pipeline
+  was skipped on its dispatch surface (zam64's 31 IOCTLs were all missed).
+  Detecting a framework type now *adds* its label without *replacing* the legacy
+  dispatch analysis.
+- `ioctl_decoder.scan_dispatchers()`: the low-precision immediate-operand scan
+  (last resort) now runs only on a function that `references_iocontrolcode()`
+  confirms actually reads the IoControlCode. This stops a CFG-misidentified
+  library/CRT helper from leaking its internal constants as IOCTLs - RTCore64's
+  `SepSddlGetAclForString` had emitted `0xCCCCCCCD` (an unsigned divide-by-5
+  reciprocal magic), a `0x6C416553` pool tag, and NTSTATUS codes as IOCTLs
+  (RTCore64: 22 with 4 false positives -> 18 clean).
+- `scoring.score()`: severity is attributed per-IOCTL in three tiers
+  (`data['sink_attribution']`): `handler` (precise, the IOCTL's resolved handler),
+  `case-inline` (sinks/opcodes found inside the IOCTL's own switch-case body), and
+  `dispatcher-wide` (imprecise fallback). Only precise/in-case evidence can force
+  `METHOD_NEITHER` to CRITICAL; a dispatcher-wide bump is **capped at HIGH**. This
+  removes the blanket-CRITICAL inflation where every IOCTL in a monolithic
+  dispatcher inherited the union of all sinks (MODAPI 16 CRITICAL -> 8 CRITICAL /
+  5 HIGH / 2 MEDIUM / 2 LOW / 1 INFO; the genuinely dangerous handlers stay
+  CRITICAL).
+- `heuristics.check_user_copy_validation()`: scoped to handler-reachable functions
+  (`handler_eas`) instead of the whole binary, so internal / logging /
+  statically-linked-library copies unrelated to the dispatch surface are no longer
+  flagged - the dominant "Unvalidated copy" false-positive class (amp 15 -> 0,
+  RTCore64 3 -> 0, all now scoped to the attack surface).
+- `ioctl_decoder._NTSTATUS_FALLBACK`: expanded to cover the common `0xC00000xx`
+  error range (incl. `STATUS_INSUFFICIENT_RESOURCES` 0xC000009A / `STATUS_INVALID_ACL`
+  0xC0000077) as cheap insurance for IDBs with no NTSTATUS enum loaded. The filter
+  never blanket-rejects high-bit values, since real vendor IOCTLs use device types
+  0x8000+ (`0x8000xxxx`, `0x9C40xxxx`).
+- `wdm.find_dispatch_function()`: extended `excluded_functions` with CRT/security
+  thunks (`__GSHandlerCheck`, `__GSHandlerCheckCommon`) and now skips `FUNC_LIB`
+  candidates, so a library helper is less likely to be mis-selected as a dispatcher
+  (dbutil_2_3 previously enqueued `__GSHandlerCheckCommon`).
+
+### Fixed
+
+- `tests/run_cross_version.ps1`: passed `-S<script> <resultpath>` - a `-S` value
+  containing a space, which PowerShell's `Start-Process` mangles - so every cell
+  reported `no_result` (the exact bug `run_golden.ps1` was written to avoid). It
+  now passes no `-S` argument and globs the `<idb>.smoke.json` that `ida_smoke.py`
+  derives from the IDB. Cross-version smoke passes on IDA 7.6 SP1 and 8.4; IDA Free
+  9.3 cannot be driven headlessly (`-S` batch scripting is disabled in the Free
+  edition).
+
 ## [2.4.0] - 2026-07-03
 
 The 2026-06/07 two-part code review (findings B1-B19, N20-N29), the new
@@ -799,7 +895,8 @@ Each review-derived `Fixed` bullet below is tagged with its finding id.
 
 Initial release.
 
-[Unreleased]: https://github.com/VoidSec/DriverBuddyReloaded/compare/2.4.0...HEAD
+[Unreleased]: https://github.com/VoidSec/DriverBuddyReloaded/compare/2.5.0...HEAD
+[2.5.0]: https://github.com/VoidSec/DriverBuddyReloaded/compare/2.4.0...2.5.0
 [2.4.0]: https://github.com/VoidSec/DriverBuddyReloaded/compare/2.3.0...2.4.0
 [2.3.0]: https://github.com/VoidSec/DriverBuddyReloaded/compare/2.2.0...2.3.0
 [2.2.0]: https://github.com/VoidSec/DriverBuddyReloaded/compare/2.1.0...2.2.0
