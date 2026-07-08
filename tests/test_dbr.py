@@ -240,6 +240,23 @@ def main():
         h = fh.read()
     check("stub.sys" in h, "html renders driver")
 
+    # ---- HTML: client-side sortable columns ----
+    check('id="findings"' in h and "addEventListener" in h,
+          "html table is client-side sortable (headers wired to a sorter)")
+    check('data-type="num"' in h and "data-sort=" in h,
+          "html marks numeric columns and carries per-row numeric sort keys")
+    check(".s0,tr.s0 td{background:#e6f0ff}" in h,
+          "html gives INFO (s0) rows a light-blue background")
+
+    # ---- default_sort_key: severity first, confirmed call-chains lead the tier ----
+    rep_ord = reporting.Reporter()
+    rep_ord.add_finding("ioctl", "hi-ioctl", ea=0x2000, severity=config.SEV_HIGH)
+    rep_ord.add_finding("callchain", "hi-callchain", ea=0x1000, severity=config.SEV_HIGH)
+    rep_ord.add_finding("heuristic", "crit-heuristic", ea=0x3000, severity=config.SEV_CRITICAL)
+    ordered = [f.title for f in sorted(rep_ord.findings, key=reporting.default_sort_key)]
+    check(ordered == ["crit-heuristic", "hi-callchain", "hi-ioctl"],
+          "default order: highest severity first, callchain ahead of ioctl within a tier")
+
     # ---- T1: check_for_fake_driver_entry backward walk uses idc.prev_head ----
     # Set up a fake function: start=0x10000, end=0x10010.
     # Walking backwards finds "jmp real_entry" at 0x1000c after one step from 0x10010.

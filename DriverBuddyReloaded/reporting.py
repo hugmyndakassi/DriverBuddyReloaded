@@ -38,12 +38,44 @@ class Finding:
 
 
 # Light row backgrounds for the results window, keyed by severity (BGR).
+# Values mirror the HTML .s4..s0 CSS backgrounds (BGR = 0xBBGGRR of the same RGB).
 _SEVERITY_COLORS = {
-    config.SEV_CRITICAL: 0xCCCCFF,
-    config.SEV_HIGH: 0xCCE5FF,
-    config.SEV_MEDIUM: 0xCCFFFF,
-    config.SEV_LOW: 0xE5FFE5,
+    config.SEV_CRITICAL: 0xCCCCFF,  # RGB #FFCCCC light red
+    config.SEV_HIGH: 0xCCE5FF,      # RGB #FFE5CC light orange
+    config.SEV_MEDIUM: 0xCCFFFF,    # RGB #FFFFCC light yellow
+    config.SEV_LOW: 0xE5FFE5,       # RGB #E5FFE5 light green
+    config.SEV_INFO: 0xFFF0E6,      # RGB #E6F0FF light blue
 }
+
+# Default report ordering priority *within* a severity tier. Call-chain findings
+# float to the top of their tier: each is a confirmed source -> dangerous-sink
+# path (user-controlled IOCTL input provably reaches the sink), so it is directly
+# actionable in a way a surface match or an unlinked heuristic signal is not.
+# Lower rank sorts higher. Categories not listed fall to the end of the tier.
+_CATEGORY_PRIORITY = {
+    "callchain": 0,
+    "ioctl": 1,
+    "heuristic": 2,
+    "opcode": 3,
+    "acl": 4,
+    "symlink": 5,
+    "export": 6,
+    "pooltag": 7,
+}
+_CATEGORY_PRIORITY_DEFAULT = 50
+
+
+def _category_rank(category):
+    return _CATEGORY_PRIORITY.get(category, _CATEGORY_PRIORITY_DEFAULT)
+
+
+def default_sort_key(f):
+    """Default ordering for the HTML report and results window: severity first
+    (highest at top), then category priority (confirmed call-chains lead their
+    tier -- see _CATEGORY_PRIORITY), then address for a stable, deterministic
+    tie-break. Findings without an address sort last within their group."""
+    ea = f.ea if f.ea not in (None, BADADDR) else BADADDR
+    return (-f.severity, _category_rank(f.category), ea)
 
 
 class Reporter:
@@ -186,14 +218,20 @@ class Reporter:
                 k, config.severity_name(k), counts[k])
             for k in sorted(counts, reverse=True))
         rows = []
-        for f in sorted(self.findings, key=lambda x: -x.severity):
+        for f in sorted(self.findings, key=default_sort_key):
+            # data-sort carries the numeric key the client-side sorter uses for
+            # the Severity and Address columns, so they order by rank/address
+            # rather than by the displayed label text. -1 sinks address-less rows.
+            ea_sort = f.ea if f.ea not in (None, BADADDR) else -1
             rows.append(
-                "<tr class='s{sev}'><td>{sevname}</td><td>{cat}</td>"
-                "<td><code>{loc}</code></td><td>{func}</td><td>{title}</td>"
-                "<td>{detail}</td></tr>".format(
+                "<tr class='s{sev}'>"
+                "<td data-sort='{sev}'>{sevname}</td><td>{cat}</td>"
+                "<td data-sort='{ea_sort}'><code>{loc}</code></td>"
+                "<td>{func}</td><td>{title}</td><td>{detail}</td></tr>".format(
                     sev=f.severity,
                     sevname=config.severity_name(f.severity),
                     cat=esc(f.category),
+                    ea_sort=ea_sort,
                     loc=self._loc(f.ea),
                     func=esc(f.func),
                     title=esc(f.title),
@@ -203,7 +241,8 @@ class Reporter:
             sha256=esc(config.input_sha256()),
             generated=esc(config.run_stamp()),
             summary=summary,
-            rows="\n".join(rows) or "<tr><td colspan='6'>No findings.</td></tr>")
+            rows="\n".join(rows) or "<tr><td colspan='6'>No findings.</td></tr>",
+            script=_HTML_SCRIPT)
 
     def show_window(self):
         global _last_results_chooser
@@ -218,20 +257,83 @@ _HTML_TEMPLATE = """<!DOCTYPE html>
 <style>
 body{{font-family:Segoe UI,Arial,sans-serif;margin:2em;color:#222}}
 h1{{margin-bottom:0}} .meta{{color:#666;font-size:.9em;margin:.3em 0 1.2em}}
+.hint{{color:#888;font-size:.8em;margin:.2em 0 1em}}
 table{{border-collapse:collapse;width:100%}} th,td{{border:1px solid #ddd;padding:6px 8px;text-align:left;font-size:.9em}}
-th{{background:#f4f4f4}} code{{font-family:Consolas,monospace}}
+th{{background:#f4f4f4;cursor:pointer;user-select:none;position:relative;padding-right:18px}}
+th:hover{{background:#e9e9e9}}
+th.sort-asc::after,th.sort-desc::after{{content:"";position:absolute;right:6px;top:50%;border:5px solid transparent}}
+th.sort-asc::after{{border-bottom-color:#333;margin-top:-9px}}
+th.sort-desc::after{{border-top-color:#333;margin-top:-1px}}
+code{{font-family:Consolas,monospace}}
 .sev{{padding:2px 8px;border-radius:3px;margin-right:6px;font-size:.85em}}
 .s4,tr.s4 td{{background:#ffd6d6}} .s3,tr.s3 td{{background:#ffe6cc}}
 .s2,tr.s2 td{{background:#ffffcc}} .s1,tr.s1 td{{background:#e6ffe6}}
+.s0,tr.s0 td{{background:#e6f0ff}}
 </style></head><body>
 <h1>Driver Buddy Reloaded</h1>
 <div class="meta">Driver: <b>{driver}</b> &middot; SHA-256: <code>{sha256}</code> &middot; Generated: {generated}</div>
 <div class="meta">{summary}</div>
-<table><thead><tr><th>Severity</th><th>Category</th><th>Address</th><th>Function</th>
-<th>Title</th><th>Detail</th></tr></thead><tbody>
+<div class="hint">Click any column header to sort. Default order: severity, then confirmed call-chains first within each tier.</div>
+<table id="findings"><thead><tr>
+<th data-type="num">Severity</th><th data-type="text">Category</th>
+<th data-type="num">Address</th><th data-type="text">Function</th>
+<th data-type="text">Title</th><th data-type="text">Detail</th></tr></thead><tbody>
 {rows}
-</tbody></table></body></html>
+</tbody></table>
+{script}
+</body></html>
 """
+
+# Client-side column sorter. Kept as a separate constant (not part of the
+# str.format template) so its many literal braces need no escaping. Vanilla JS,
+# no external dependencies, so the report sorts correctly when opened as a local
+# file with no network access.
+_HTML_SCRIPT = """<script>
+(function () {
+  var table = document.getElementById('findings');
+  if (!table || !table.tHead || !table.tBodies.length) return;
+  var headers = table.tHead.rows[0].cells;
+  var tbody = table.tBodies[0];
+  var state = { col: -1, dir: 1 };
+
+  function value(row, idx, type) {
+    var cell = row.cells[idx];
+    var raw = cell.getAttribute('data-sort');
+    if (raw === null) raw = cell.textContent;
+    if (type === 'num') {
+      var n = parseFloat(raw);
+      return isNaN(n) ? -Infinity : n;
+    }
+    return raw.toLowerCase();
+  }
+
+  function sortBy(idx) {
+    var type = headers[idx].getAttribute('data-type') || 'text';
+    // Same column: flip direction. New column: numeric starts descending
+    // (highest severity / address on top), text starts ascending.
+    var dir = (state.col === idx) ? -state.dir : (type === 'num' ? -1 : 1);
+    state = { col: idx, dir: dir };
+
+    var rows = Array.prototype.slice.call(tbody.rows);
+    rows.sort(function (a, b) {
+      var va = value(a, idx, type), vb = value(b, idx, type);
+      if (va < vb) return -dir;
+      if (va > vb) return dir;
+      return 0;
+    });
+    for (var i = 0; i < rows.length; i++) tbody.appendChild(rows[i]);
+
+    for (var h = 0; h < headers.length; h++)
+      headers[h].className = headers[h].className.replace(/ ?sort-(asc|desc)/g, '');
+    headers[idx].className += (dir === 1 ? ' sort-asc' : ' sort-desc');
+  }
+
+  for (var i = 0; i < headers.length; i++)
+    (function (col) {
+      headers[col].addEventListener('click', function () { sortBy(col); });
+    })(i);
+})();
+</script>"""
 
 
 class ResultsChooser(ida_kernwin.Choose):
@@ -245,8 +347,9 @@ class ResultsChooser(ida_kernwin.Choose):
              ["Function", 24], ["Title", 40], ["Detail", 40]],
             flags=(getattr(ida_kernwin.Choose, "CH_CAN_REFRESH", 0) |
                    getattr(ida_kernwin.Choose, "CH_CAN_DEL", 0)))
-        # Highest severity first.
-        self.items = sorted(findings, key=lambda f: -f.severity)
+        # Same default ordering as the HTML report: severity first, confirmed
+        # call-chains leading their tier (see default_sort_key).
+        self.items = sorted(findings, key=default_sort_key)
         self._rep = rep
 
     def OnGetSize(self):

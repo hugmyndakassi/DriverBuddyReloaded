@@ -66,6 +66,10 @@ DriverBuddyReloaded.py          <- IDA plugin_t (init / run / term / UI hooks)
 ### The Reporter spine
 Every module emits `Finding` objects (defined in `reporting.py`) via `rep.add_finding(category, title, ...)` instead of bare `print()`. `rep.info()` writes INFO-level lines. At the end of a run the Reporter renders the clickable findings window (`ResultsChooser`), the IOCTL recap window (`IOCTLChooser`), `findings.json`, and `report.html`. Never bypass the Reporter with direct `print()` calls.
 
+**Finding ordering** is shared by the HTML report and the `ResultsChooser` window via `reporting.default_sort_key`: severity descending, then `_CATEGORY_PRIORITY` (so confirmed `callchain` findings -- provable user-input -> dangerous-sink paths -- lead their severity tier, ahead of `ioctl`/`heuristic`/`opcode`/etc.), then address as a stable tie-break. Address-less findings sort last within their group. Adjust `_CATEGORY_PRIORITY` to re-rank a category within its tier.
+
+**HTML report** (`_render_html` + `_HTML_SCRIPT`) has client-side sortable columns: clicking any header sorts by that column (click again to reverse), dependency-free vanilla JS so it works from a local file with no network. Severity and Address sort numerically via a per-row `data-sort` attribute (severity rank; numeric EA, `-1` for address-less rows) rather than by displayed label text; the other columns sort as text. Row/badge backgrounds run the full severity scale `.s4..s0` (red/orange/yellow/green/blue); the `ResultsChooser` `_SEVERITY_COLORS` mirrors the same RGB values in BGR. Keep the two color tables in sync when changing either.
+
 ### Plugin UI layer (DriverBuddyReloaded.py)
 `DriverBuddyReloaded.py` owns all IDA UI concerns and delegates analysis to `analysis.run_analysis()`.
 

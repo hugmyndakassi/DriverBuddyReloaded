@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- HTML report: client-side sortable columns. Clicking any column header sorts by
+  it (click again to reverse); Severity and Address sort numerically via a per-row
+  `data-sort` key (severity rank; numeric EA, `-1` for address-less rows), the
+  other columns as text. Dependency-free vanilla JS, so it works from a local file
+  with no network.
+- INFO-severity findings now render light blue (`#e6f0ff`), completing the report
+  severity scale red/orange/yellow/green/blue in both the HTML report (`.s0`) and
+  the in-IDA `ResultsChooser` (`_SEVERITY_COLORS`).
+
+### Changed
+
+- Default finding order (`reporting.default_sort_key`, now shared by the HTML
+  report and the `ResultsChooser` window): severity descending, then category
+  priority so confirmed `callchain` findings -- provable user-input -> dangerous-sink
+  paths -- lead their severity tier, ahead of `ioctl`/`heuristic`/`opcode`/etc.,
+  then address as a stable tie-break. Previously ordering was severity-only.
+
 ## [2.5.0] - 2026-07-03
 
 Detection-accuracy pass driven by an evaluation against eight known-vulnerable
