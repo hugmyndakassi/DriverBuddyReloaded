@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.1] - 2026-07-08
+
 ### Added
 
 - HTML report: client-side sortable columns. Clicking any column header sorts by
@@ -914,7 +916,8 @@ Each review-derived `Fixed` bullet below is tagged with its finding id.
 
 Initial release.
 
-[Unreleased]: https://github.com/VoidSec/DriverBuddyReloaded/compare/2.5.0...HEAD
+[Unreleased]: https://github.com/VoidSec/DriverBuddyReloaded/compare/2.5.1...HEAD
+[2.5.1]: https://github.com/VoidSec/DriverBuddyReloaded/compare/2.5.0...2.5.1
 [2.5.0]: https://github.com/VoidSec/DriverBuddyReloaded/compare/2.4.0...2.5.0
 [2.4.0]: https://github.com/VoidSec/DriverBuddyReloaded/compare/2.3.0...2.4.0
 [2.3.0]: https://github.com/VoidSec/DriverBuddyReloaded/compare/2.2.0...2.3.0
